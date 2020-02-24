@@ -10,9 +10,9 @@ import java.util.List;
 @Repository
 public interface UserDao {
     int insertUser(User user);
-//    int deleteUserById(Integer id);
-//    int updateUser(User user);
-//    List<User> queryUser();
-
+    int deleteUserById(Integer id);
+    int updateUser(User user);
+    List<User> queryUser(String keyString, Integer pageNum, Integer pageSize);
+    int userCount();
 
 }

@@ -8,7 +8,25 @@
         (`name`,`password`,`salt`,`head_url`)
         VALUES
         (#{name},#{password},#{salt},#{headUrl})
-
     </insert>
+    <delete id="deleteUserById">
+        DELETE FROM `sightrec`.`user`
+        WHERE `id`=#{id}
+    </delete>
+    <update id="updateUser" parameterType="com.wlc.sightrec.entity.User">
+        UPDATE `sightrec`.`user`
+        <set>
+            <if test="name!=null">`name`=#{name},</if>
+            <if test="headUrl!=null">`head_url`=#{headUrl}</if>
+        </set>
+        WHERE `id`=#{id}
+    </update>
+    <select id="queryUser">
+        SELECT * from `sightrec`.`user`
+        WHERE `name` like '%${keyString}%' limit ${(pageNum-1)*pageSize}, #{pageSize}
+    </select>
+    <select id="userCount">
+        select count(*) from `sight`.`user`
+    </select>
 
 </mapper>
