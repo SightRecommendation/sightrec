@@ -5,21 +5,19 @@ import com.wlc.sightrec.entity.Comment;
 import com.wlc.sightrec.service.impl.CommentServiceImpl;
 import com.wlc.sightrec.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-@Controller
+@RestController
 public class CommentController {
 
     @Autowired
     CommentServiceImpl commentService;
 
     @RequestMapping(path = {"/comments"}, method = {RequestMethod.GET, RequestMethod.POST})
-    @ResponseBody
     public JSONObject getComments(@RequestBody JSONObject queryInfo,
                                   HttpServletRequest request, HttpServletResponse response) {
         // keys: query pageNum pagesize
@@ -30,7 +28,7 @@ public class CommentController {
         String query = queryInfo.getString("query");
         int pageNum = Integer.parseInt(queryInfo.getString("pageNum"));
         int pageSize = Integer.parseInt(queryInfo.getString("pageSize"));
-        int totalPage = commentService.getCommentCount() / pageSize + 1;
+        int totalPage = (int) Math.ceil(commentService.getCommentCount() * 1.0 / pageSize);
         List<Comment> commentList;
 
         JSONObject comments = new JSONObject();
@@ -47,9 +45,8 @@ public class CommentController {
     }
 
     @RequestMapping(path = {"/comments/{id}"}, method = {RequestMethod.DELETE})
-    @ResponseBody
-    public JSONObject deleteComments(@PathVariable("id") int id,
-                                     HttpServletRequest request, HttpServletResponse response) {
+    public JSONObject deleteComment(@PathVariable("id") int id,
+                                    HttpServletRequest request, HttpServletResponse response) {
         // token 验证没写
         String auth = request.getHeader("Authorization");
 

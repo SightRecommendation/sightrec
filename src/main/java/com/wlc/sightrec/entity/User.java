@@ -3,7 +3,6 @@ package com.wlc.sightrec.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import sun.security.util.Password;
 
 @Data
 @NoArgsConstructor
