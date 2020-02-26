@@ -6,6 +6,7 @@ CREATE TABLE `user` (
   `head_url` varchar(256) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 CREATE TABLE `comment` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `content` TEXT NOT NULL,
@@ -17,6 +18,7 @@ CREATE TABLE `comment` (
   INDEX `sight_index` (`sight_id` ASC))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
+
 CREATE TABLE `admin` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL unique,
@@ -26,3 +28,5 @@ CREATE TABLE `admin` (
   `email` varchar(64) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
