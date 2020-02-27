@@ -19,16 +19,7 @@ public class JsonUtil {
         dataJson.put("totalPage", totalPage);
         dataJson.put("pageNum", pageNum);
         JSONArray commentArrayJson = new JSONArray();
-        for (Comment comment : commentList) {
-            JSONObject commentJson = new JSONObject();
-            commentJson.put("id", comment.getId());
-            commentJson.put("content", comment.getContent());
-            commentJson.put("userId", comment.getUserId());
-            commentJson.put("sightId", comment.getSightId());
-            commentJson.put("createdDate", comment.getCreatedDate());
-            commentJson.put("status", comment.getStatus());
-            commentArrayJson.add(commentJson);
-        }
+        commentArrayJson.addAll(commentList);
         dataJson.put("comment", commentArrayJson);
         return dataJson;
     }

@@ -2,7 +2,7 @@ package com.wlc.sightrec.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wlc.sightrec.entity.Comment;
-import com.wlc.sightrec.service.impl.CommentServiceImpl;
+import com.wlc.sightrec.service.CommentService;
 import com.wlc.sightrec.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +15,7 @@ import java.util.List;
 public class CommentController {
 
     @Autowired
-    CommentServiceImpl commentService;
+    CommentService commentService;
 
     @RequestMapping(path = {"/comments"}, method = {RequestMethod.GET, RequestMethod.POST})
     public JSONObject getComments(@RequestBody JSONObject queryInfo,
