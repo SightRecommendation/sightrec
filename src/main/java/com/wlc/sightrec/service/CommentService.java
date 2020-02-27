@@ -5,10 +5,12 @@ import com.wlc.sightrec.entity.Comment;
 import java.util.List;
 
 public interface CommentService {
-    int addComment(Comment comment);
+    void addComment(Comment comment);
     List<Comment> getCommentsBySight(int sightId);
-    List<Comment> getCommentsByPage(int pageSize, int pageNum);
+    Comment getCommentById(int id);
+    List<Comment> getCommentsByContent(String query);
     int getCommentCountbySight(int sightId);
     int getCommentCount();
     void deleteComment(int id);
+    void modifyComment(int id, String content);
 }

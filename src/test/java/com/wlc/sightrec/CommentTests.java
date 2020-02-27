@@ -15,12 +15,17 @@ public class CommentTests {
 
     @Test
     void contextLoads() {
-        Comment comment = new Comment();
-        comment.setContent("第三条评论");
-        comment.setCreatedDate(new Date());
-        comment.setSightId(1);
-        comment.setUserId(1);
-        commentDao.addComment(comment);
+        for (int i = 1; i < 14; i++) {
+            Comment comment = new Comment();
+            StringBuilder content = new StringBuilder("第 ");
+            content.append(i);
+            content.append(" 条评论");
+            comment.setContent(String.valueOf(content));
+            comment.setCreatedDate(new Date());
+            comment.setSightId(1);
+            comment.setUserId(i % 3);
+            commentDao.addComment(comment);
+        }
 //        commentDao.updateStatus(1);
     }
 }
