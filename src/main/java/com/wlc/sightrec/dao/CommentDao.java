@@ -14,7 +14,7 @@ public interface CommentDao {
     String SELECT_FIELDS = "id, " + INSERT_FIELDS;
 
     @Insert({"insert into ", TABLE_NAME, "(", INSERT_FIELDS,
-            ") values (#{content},#{userId},#{sightId},#{createdDate},#{status})"})
+            ") values (#{content},#{userId},#{sightId},#{createdDate},0)"})
     int addComment(Comment comment);
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME,
@@ -22,8 +22,12 @@ public interface CommentDao {
     List<Comment> selectBySight(@Param("sightId") int sightId);
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME,
-            " where status=0 order by id desc limit #{limit} offset #{offset}"})
-    List<Comment> selectByPage(@Param("limit") int limit, @Param("offset") int offset);
+            " where status=0 and id=#{id}"})
+    Comment selectById(@Param("id") int id);
+
+    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME,
+            " where status=0 and content like #{query} order by id desc"})
+    List<Comment> selectByPage(@Param("query") String query);
 
     @Select({"select count(id) from ", TABLE_NAME,
             " where status=0 and sight_id=#{sightId}"})
@@ -38,5 +42,9 @@ public interface CommentDao {
      * */
     @Update({"update ", TABLE_NAME,
             "set status=1 where id=#{id}"})
-    void updateStatus(@Param("id") int id);
+    int updateStatus(@Param("id") int id);
+
+    @Update({"update ", TABLE_NAME,
+            "set content=#{content} where id=#{id}"})
+    int updateComment(@Param("id") int id, @Param("content") String content);
 }

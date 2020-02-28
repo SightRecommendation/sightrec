@@ -15,8 +15,16 @@ public class CommentServiceImpl implements CommentService {
     CommentDao commentDao;
 
     @Override
-    public int addComment(Comment comment) {
-        return commentDao.addComment(comment);
+    public void addComment(Comment comment) {
+        try {
+            int success = commentDao.addComment(comment);
+            System.out.println(comment.getContent());
+            if (success <= 0) {
+                throw new RuntimeException("添加评论失败：数据库 return");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("添加评论失败：catch");
+        }
     }
 
     @Override
@@ -25,9 +33,13 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comment> getCommentsByPage(int pageSize, int pageNum) {
-        int offset = pageSize * (pageNum - 1);
-        return commentDao.selectByPage(pageSize, offset);
+    public Comment getCommentById(int id) {
+        return commentDao.selectById(id);
+    }
+
+    @Override
+    public List<Comment> getCommentsByContent(String query) {
+        return commentDao.selectByPage(query);
     }
 
     @Override
@@ -42,6 +54,25 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void deleteComment(int id) {
-        commentDao.updateStatus(id);
+        try {
+            int success = commentDao.updateStatus(id);
+            if (success <= 0) {
+                throw new RuntimeException("删除评论失败：数据库 return");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("删除评论失败：catch");
+        }
+    }
+
+    @Override
+    public void modifyComment(int id, String content) {
+        try {
+            int success = commentDao.updateComment(id, content);;
+            if (success <= 0) {
+                throw new RuntimeException("修改评论失败：数据库 return");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("修改评论失败：catch");
+        }
     }
 }

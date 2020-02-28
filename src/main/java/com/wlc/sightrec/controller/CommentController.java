@@ -2,7 +2,7 @@ package com.wlc.sightrec.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wlc.sightrec.entity.Comment;
-import com.wlc.sightrec.service.impl.CommentServiceImpl;
+import com.wlc.sightrec.service.CommentService;
 import com.wlc.sightrec.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,33 +15,98 @@ import java.util.List;
 public class CommentController {
 
     @Autowired
-    CommentServiceImpl commentService;
+    CommentService commentService;
 
-    @RequestMapping(path = {"/comments"}, method = {RequestMethod.GET, RequestMethod.POST})
-    public JSONObject getComments(@RequestBody JSONObject queryInfo,
+    @RequestMapping(path = {"/comments"}, method = {RequestMethod.GET})
+    public JSONObject getComments(@RequestParam("query") String query,
+                                  @RequestParam("pageNum") int pageNum,
+                                  @RequestParam("pageSize") int pageSize,
                                   HttpServletRequest request, HttpServletResponse response) {
-        // keys: query pageNum pagesize
         // token 验证没写
-        // query 为搜索参数，没写
+        // query 为搜索参数
         String auth = request.getHeader("Authorization");
 
-        String query = queryInfo.getString("query");
-        int pageNum = Integer.parseInt(queryInfo.getString("pageNum"));
-        int pageSize = Integer.parseInt(queryInfo.getString("pageSize"));
-        int totalPage = (int) Math.ceil(commentService.getCommentCount() * 1.0 / pageSize);
         List<Comment> commentList;
-
-        JSONObject comments = new JSONObject();
+        List<Comment> commentListByPage;
+        JSONObject getComments = new JSONObject();
         int statusCode = response.getStatus();
-        if (statusCode == 200) {
-            commentList = commentService.getCommentsByPage(pageSize, pageNum);
-            comments.put("data", JsonUtil.getCommentData(totalPage, pageNum, commentList));
-            comments.put("meta", JsonUtil.getMeta("获取评论成功", statusCode));
-        } else {
-            comments.put("data", null);
-            comments.put("meta", JsonUtil.getMeta("获取评论失败", statusCode));
+        try {
+            query = "%" + query + "%";
+            // 模糊搜索，返回所有符合条件的评论
+            commentList = commentService.getCommentsByContent(query);
+            int commentNum = commentList.size();
+            // 根据 页码 和 每页评论数 分页
+            int totalPage = (int) Math.ceil(commentNum * 1.0 / pageSize);
+            int offset = pageSize * (pageNum - 1);
+            commentListByPage = commentList.subList(offset, Math.min(commentNum, offset + pageSize));
+            getComments.put("data", JsonUtil.getCommentData(totalPage, pageNum, commentNum, commentListByPage));
+            getComments.put("meta", JsonUtil.getMeta("获取评论列表成功", statusCode));
+            return getComments;
+        } catch (Exception e) {
+            getComments.put("data", null);
+            getComments.put("meta", JsonUtil.getMeta("获取评论列表失败", statusCode));
+            return getComments;
         }
-        return comments;
+    }
+
+    @RequestMapping(path = {"/comments"}, method = {RequestMethod.POST})
+    public JSONObject addComment(@RequestBody Comment comment,
+                                 HttpServletRequest request, HttpServletResponse response) {
+        // token 验证没写
+        String auth = request.getHeader("Authorization");
+
+        JSONObject addComment = new JSONObject();
+        int statusCode = response.getStatus();
+        try {
+            commentService.addComment(comment);
+            addComment.put("data", comment);
+            addComment.put("meta", JsonUtil.getMeta("添加评论成功", statusCode));
+            return addComment;
+        } catch (Exception e) {
+            addComment.put("data", null);
+            addComment.put("meta", JsonUtil.getMeta("添加评论成功", statusCode));
+            return addComment;
+        }
+    }
+
+    @RequestMapping(path = {"/comments/{id}"}, method = {RequestMethod.GET})
+    public JSONObject getComment(@PathVariable("id") int id,
+                                 HttpServletRequest request, HttpServletResponse response) {
+        // token 验证没写
+        String auth = request.getHeader("Authorization");
+
+        JSONObject getComment = new JSONObject();
+        int statusCode = response.getStatus();
+        try {
+            Comment commentById = commentService.getCommentById(id);
+            getComment.put("data", commentById);
+            getComment.put("meta", JsonUtil.getMeta("获取评论成功", statusCode));
+            return getComment;
+        } catch (Exception e) {
+            getComment.put("data", null);
+            getComment.put("meta", JsonUtil.getMeta("获取评论失败", statusCode));
+            return getComment;
+        }
+    }
+
+    @RequestMapping(path = {"/comments/{id}"}, method = {RequestMethod.PUT})
+    public JSONObject modifyComment(@PathVariable("id") int id, @RequestBody JSONObject comment,
+                                    HttpServletRequest request, HttpServletResponse response) {
+        // token 验证没写
+        String auth = request.getHeader("Authorization");
+
+        JSONObject modifyComment = new JSONObject();
+        int statusCode = response.getStatus();
+        try {
+            commentService.modifyComment(id, comment.getString("content"));
+            modifyComment.put("data", null);
+            modifyComment.put("meta", JsonUtil.getMeta("修改评论成功", statusCode));
+            return modifyComment;
+        } catch (Exception e) {
+            modifyComment.put("data", null);
+            modifyComment.put("meta", JsonUtil.getMeta("修改评论失败：状态码异常", statusCode));
+            return modifyComment;
+        }
     }
 
     @RequestMapping(path = {"/comments/{id}"}, method = {RequestMethod.DELETE})
@@ -52,14 +117,15 @@ public class CommentController {
 
         JSONObject deleteComment = new JSONObject();
         int statusCode = response.getStatus();
-        if (statusCode == 200) {
+        try {
             commentService.deleteComment(id);
             deleteComment.put("data", null);
             deleteComment.put("meta", JsonUtil.getMeta("删除评论成功", statusCode));
-        } else {
+            return deleteComment;
+        } catch (Exception e) {
             deleteComment.put("data", null);
-            deleteComment.put("meta", JsonUtil.getMeta("删除评论失败", statusCode));
+            deleteComment.put("meta", JsonUtil.getMeta("删除评论失败：状态码异常", statusCode));
+            return deleteComment;
         }
-        return deleteComment;
     }
 }

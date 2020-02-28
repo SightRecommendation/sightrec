@@ -14,22 +14,15 @@ public class JsonUtil {
         return metaJson;
     }
 
-    public static JSONObject getCommentData(int totalPage, int pageNum, List<Comment> commentList) {
+    public static JSONObject getCommentData(int totalPage, int pageNum, int commentNum,
+                                            List<Comment> commentList) {
         JSONObject dataJson = new JSONObject();
         dataJson.put("totalPage", totalPage);
+        dataJson.put("commentNum", commentNum);
         dataJson.put("pageNum", pageNum);
         JSONArray commentArrayJson = new JSONArray();
-        for (Comment comment : commentList) {
-            JSONObject commentJson = new JSONObject();
-            commentJson.put("id", comment.getId());
-            commentJson.put("content", comment.getContent());
-            commentJson.put("userId", comment.getUserId());
-            commentJson.put("sightId", comment.getSightId());
-            commentJson.put("createdDate", comment.getCreatedDate());
-            commentJson.put("status", comment.getStatus());
-            commentArrayJson.add(commentJson);
-        }
-        dataJson.put("comment", commentArrayJson);
+        commentArrayJson.addAll(commentList);
+        dataJson.put("comments", commentArrayJson);
         return dataJson;
     }
 }
