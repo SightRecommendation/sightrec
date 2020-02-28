@@ -17,16 +17,25 @@
         UPDATE `sightrec`.`user`
         <set>
             <if test="name!=null">`name`=#{name},</if>
+            <if test="salt!=null">`salt`=#{salt},</if>
+            <if test="password!=null">`password`=#{password},</if>
             <if test="headUrl!=null">`head_url`=#{headUrl}</if>
         </set>
         WHERE `id`=#{id}
     </update>
-    <select id="queryUser">
-        SELECT * from `sightrec`.`user`
+    <select id="queryUser" resultType="com.wlc.sightrec.entity.User">
+        SELECT `name`,`head_url` from `sightrec`.`user`
         WHERE `name` like '%${keyString}%' limit ${(pageNum-1)*pageSize}, #{pageSize}
     </select>
-    <select id="userCount">
-        select count(*) from `sight`.`user`
+    <select id="userCount" resultType="int">
+        select count(*) from `sightrec`.`user`
     </select>
-
+    <select id="queryUserByName" resultType="com.wlc.sightrec.entity.User">
+        select `name`,`head_url` from `sightrec`.`user`
+        where `name`=#{name}
+    </select>
+    <select id="queryUserById" resultType="com.wlc.sightrec.entity.User">
+        select `name`,`head_url` from `sightrec`.`user`
+        where `id`=#{id}
+    </select>
 </mapper>

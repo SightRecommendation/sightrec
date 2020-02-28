@@ -7,7 +7,11 @@
 		INSERT INTO `sightrec`.`admin`
         (`name`,`password`,`salt`,`phone`,`email`)
         VALUES
-        (#{name},#{password},#{salt},#{hphone},#{email})
+        (#{name},#{password},#{salt},#{phone},#{email})
     </insert>
 
+    <select id="queryAdminByName" resultType="com.wlc.sightrec.entity.Admin">
+        SELECT * from `sightrec`.`admin`
+        WHERE `name`=#{name}
+    </select>
 </mapper>
