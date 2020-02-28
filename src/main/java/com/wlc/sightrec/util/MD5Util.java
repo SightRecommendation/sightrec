@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 
 import java.security.MessageDigest;
 
-public class MD5 {
-    private static final Logger logger = LoggerFactory.getLogger(MD5.class);
+public class MD5Util {
+    private static final Logger logger = LoggerFactory.getLogger(MD5Util.class);
     public static String MD5(String key) {
         char hexDigits[] = {
                 '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'

@@ -14,5 +14,6 @@ public interface UserDao {
     int updateUser(User user);
     List<User> queryUser(String keyString, Integer pageNum, Integer pageSize);
     int userCount();
-
+    User queryUserByName(String name);
+    User queryUserById(Integer id);
 }
