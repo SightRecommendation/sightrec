@@ -9,9 +9,9 @@
       <el-button type="danger" size="small" @click="logout" plain>退出</el-button>
     </el-header>
     <!-- 页面主体区域 -->
-    <el-container>
+    <el-container width="100vw">
       <!-- 侧边栏 -->
-      <el-aside width="200px">
+      <el-aside width="14vw">
         <!-- 侧边栏菜单区域 -->
         <el-menu router :default-active="activePath">
           <!-- 一级菜单 -->
@@ -27,10 +27,10 @@
         </el-menu>
       </el-aside>
       <!-- 右侧内容主体 -->
-      <el-main>
+      <div class="main">
         <!-- 路由占位符 -->
         <router-view></router-view>
-      </el-main>
+      </div>
     </el-container>
   </el-container>
 </template>
@@ -89,12 +89,15 @@
     border-top: none;
     border-left: none;
     border-right: none;
-
+    box-shadow: 0 0 10px rgba(0,0,0,.3);
+    z-index: 2;
+    position: fixed;
+    top: 0;
+    width: 100%;
     >div {
       margin-left: 10px;
       display: flex;
       align-items: center;
-
       span {
         margin-left: 10px;
       }
@@ -102,18 +105,24 @@
   }
 
   .el-aside {
+    position: fixed;
+    top: 60px;
+    height: 100%;
     background-color: #fff;
     border: 1px solid #dcdfe6;
     border-top: none;
     border-left: none;
     border-bottom: none;
-
     .el-menu {
       border-right: none;
     }
   }
 
-  .el-main {
+  .main {
+    position: relative;
+    top: 75px;
+    left: 15.5vw;
+    width: 82vw;
     background-color: #fff;
   }
 
