@@ -44,13 +44,15 @@ export default {
     login () {
       this.$refs.loginFormRef.validate(async valid => {
         if (!valid) return
-        const { data: result } = await this.$http.post('/admins/login', this.loginForm)
+        //const { data: result } = await this.$http.post('/admins/login', this.loginForm)
+        const response = await this.$http.post('/admins/login', this.loginForm)
         // 登录请求返回的 Json 中没有 status 属性，先注释
         // if (result.meta.status !== 200) this.$message.error('登陆失败')
         // else this.$message.success('登陆成功')
         // console.log(result)
-        window.sessionStorage.setItem('token', result.data.token)
-        this.$router.push('/home')
+        console.log(response);
+        // window.sessionStorage.setItem('token', result.data.token)
+        // this.$router.push('/home')
       })
     }
   }
