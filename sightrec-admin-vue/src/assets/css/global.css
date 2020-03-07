@@ -18,8 +18,21 @@ body,
   font-size: 12px;
 }
 
+.el-card {
+  margin-bottom: 30px;
+}
+
 .el-pagination {
   margin-top: 15px;
+}
+
+.el-scrollbar__wrap {
+  overflow-x: hidden;
+}
+
+/* https://segmentfault.com/q/1010000015765492/a-1020000016365925 */
+.el-select-dropdown .el-scrollbar .el-scrollbar__wrap {
+  overflow: scroll;
 }
 
 textarea {

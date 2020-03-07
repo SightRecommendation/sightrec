@@ -27,19 +27,19 @@ public class IndexController {
         String auth = request.getHeader("Authorization");
 
         JSONObject menuList = new JSONObject();
-        int statusCode = response.getStatus();
-        if (statusCode == 200) {
-            List<String> menu = new ArrayList<>();
+        try {
             JSONArray dataJson = new JSONArray();
             String userJson = "{\"authName\":\"用户管理\",\"id\":\"1\",\"path\":\"users\"}";
+            String sightJson = "{\"authName\":\"景点管理\",\"id\":\"2\",\"path\":\"sights\"}";
             String commentJson = "{\"authName\":\"评论管理\",\"id\":\"3\",\"path\":\"comments\"}";
             dataJson.add(JSONObject.parse(userJson));
+            dataJson.add(JSONObject.parse(sightJson));
             dataJson.add(JSONObject.parse(commentJson));
             menuList.put("data", dataJson);
-            menuList.put("meta", JsonUtil.getMeta("获取菜单列表成功", statusCode));
-        } else {
+            menuList.put("meta", JsonUtil.getMeta("获取菜单列表成功", 200));
+        } catch (Exception e) {
             menuList.put("data", null);
-            menuList.put("meta", JsonUtil.getMeta("获取菜单列表失败", statusCode));
+            menuList.put("meta", JsonUtil.getMeta("获取菜单列表失败", 400));
         }
         return menuList;
     }

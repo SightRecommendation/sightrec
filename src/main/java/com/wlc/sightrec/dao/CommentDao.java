@@ -26,7 +26,7 @@ public interface CommentDao {
     Comment selectById(@Param("id") int id);
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME,
-            " where status=0 and content like #{query} order by id desc"})
+            " where status=0 and content like #{query} order by created_date desc"})
     List<Comment> selectByPage(@Param("query") String query);
 
     @Select({"select count(id) from ", TABLE_NAME,

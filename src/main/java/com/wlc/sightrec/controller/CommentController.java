@@ -29,7 +29,6 @@ public class CommentController {
         List<Comment> commentList;
         List<Comment> commentListByPage;
         JSONObject getComments = new JSONObject();
-        int statusCode = response.getStatus();
         try {
             query = "%" + query + "%";
             // 模糊搜索，返回所有符合条件的评论
@@ -40,11 +39,11 @@ public class CommentController {
             int offset = pageSize * (pageNum - 1);
             commentListByPage = commentList.subList(offset, Math.min(commentNum, offset + pageSize));
             getComments.put("data", JsonUtil.getCommentData(totalPage, pageNum, commentNum, commentListByPage));
-            getComments.put("meta", JsonUtil.getMeta("获取评论列表成功", statusCode));
+            getComments.put("meta", JsonUtil.getMeta("获取评论列表成功", 200));
             return getComments;
         } catch (Exception e) {
             getComments.put("data", null);
-            getComments.put("meta", JsonUtil.getMeta("获取评论列表失败", statusCode));
+            getComments.put("meta", JsonUtil.getMeta("获取评论列表失败", 400));
             return getComments;
         }
     }
@@ -56,15 +55,14 @@ public class CommentController {
         String auth = request.getHeader("Authorization");
 
         JSONObject addComment = new JSONObject();
-        int statusCode = response.getStatus();
         try {
             commentService.addComment(comment);
             addComment.put("data", comment);
-            addComment.put("meta", JsonUtil.getMeta("添加评论成功", statusCode));
+            addComment.put("meta", JsonUtil.getMeta("添加评论成功", 200));
             return addComment;
         } catch (Exception e) {
             addComment.put("data", null);
-            addComment.put("meta", JsonUtil.getMeta("添加评论成功", statusCode));
+            addComment.put("meta", JsonUtil.getMeta("添加评论成功", 400));
             return addComment;
         }
     }
@@ -76,15 +74,14 @@ public class CommentController {
         String auth = request.getHeader("Authorization");
 
         JSONObject getComment = new JSONObject();
-        int statusCode = response.getStatus();
         try {
             Comment commentById = commentService.getCommentById(id);
             getComment.put("data", commentById);
-            getComment.put("meta", JsonUtil.getMeta("获取评论成功", statusCode));
+            getComment.put("meta", JsonUtil.getMeta("获取评论成功", 200));
             return getComment;
         } catch (Exception e) {
             getComment.put("data", null);
-            getComment.put("meta", JsonUtil.getMeta("获取评论失败", statusCode));
+            getComment.put("meta", JsonUtil.getMeta("获取评论失败", 400));
             return getComment;
         }
     }
@@ -96,15 +93,14 @@ public class CommentController {
         String auth = request.getHeader("Authorization");
 
         JSONObject modifyComment = new JSONObject();
-        int statusCode = response.getStatus();
         try {
             commentService.modifyComment(id, comment.getString("content"));
             modifyComment.put("data", null);
-            modifyComment.put("meta", JsonUtil.getMeta("修改评论成功", statusCode));
+            modifyComment.put("meta", JsonUtil.getMeta("修改评论成功", 200));
             return modifyComment;
         } catch (Exception e) {
             modifyComment.put("data", null);
-            modifyComment.put("meta", JsonUtil.getMeta("修改评论失败：状态码异常", statusCode));
+            modifyComment.put("meta", JsonUtil.getMeta("修改评论失败", 400));
             return modifyComment;
         }
     }
@@ -116,15 +112,14 @@ public class CommentController {
         String auth = request.getHeader("Authorization");
 
         JSONObject deleteComment = new JSONObject();
-        int statusCode = response.getStatus();
         try {
             commentService.deleteComment(id);
             deleteComment.put("data", null);
-            deleteComment.put("meta", JsonUtil.getMeta("删除评论成功", statusCode));
+            deleteComment.put("meta", JsonUtil.getMeta("删除评论成功", 200));
             return deleteComment;
         } catch (Exception e) {
             deleteComment.put("data", null);
-            deleteComment.put("meta", JsonUtil.getMeta("删除评论失败：状态码异常", statusCode));
+            deleteComment.put("meta", JsonUtil.getMeta("删除评论失败", 400));
             return deleteComment;
         }
     }

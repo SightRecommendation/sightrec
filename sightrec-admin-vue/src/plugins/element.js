@@ -28,7 +28,8 @@ import {
   Tree,
   Select,
   Option,
-  DatePicker
+  DatePicker,
+  Scrollbar
 } from 'element-ui'
 
 Vue.use(Button)
@@ -58,6 +59,7 @@ Vue.use(Tree)
 Vue.use(Select)
 Vue.use(Option)
 Vue.use(DatePicker)
+Vue.use(Scrollbar)
 
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm

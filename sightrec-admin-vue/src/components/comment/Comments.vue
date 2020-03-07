@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="comments">
     <!-- 面包屑导航区域 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
@@ -40,7 +40,7 @@
 
       <!-- 分页区域 -->
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-        :current-page="queryInfo.pageNum" :page-sizes="[5, 8, 10, 20]" :page-size="queryInfo.pageSize"
+        :current-page="queryInfo.pageNum" :page-sizes="[7, 10, 20, 50]" :page-size="queryInfo.pageSize"
         layout="total, sizes, prev, pager, next, jumper" :total="commentNum">
       </el-pagination>
     </el-card>
@@ -105,7 +105,7 @@
           // 当前的页数
           pageNum: 1,
           // 当前每页显示多少条数据
-          pageSize: 5
+          pageSize: 7
         },
         commentList: [],
         commentNum: 0,
@@ -202,10 +202,9 @@
           // 可以发起添加评论的网络请求
           const { data: res } = await this.$http.post('comments', this.addForm)
 
-          if (res.meta.status !== 201) {
+          if (res.meta.status !== 200) {
             this.$message.error('添加评论失败！')
           }
-
           this.$message.success('添加评论成功！')
           // 隐藏添加评论的对话框
           this.addDialogVisible = false
@@ -285,5 +284,5 @@
   }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 </style>
