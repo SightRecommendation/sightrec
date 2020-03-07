@@ -1,11 +1,14 @@
 <template>
-  <div class="login_container">
+  <div class="login_container" :style="{'background': 'linear-gradient(to left bottom, hsl(' + leftColor + ', 100%, 85%) 0%,hsl(' + bottomColor + ', 100%, 85%) 100%)'}">
     <div class="login_box">
+      <h1>
+        景点管理
+      </h1>
       <!--      登陆表单区域-->
       <el-form ref="loginFormRef" :model="loginForm" :rules="loginFormRules" label-width="0px" class="login_form">
         <!--        用户名-->
         <el-form-item prop="name">
-          <el-input  v-model="loginForm.name" prefix-icon="el-icon-user"></el-input>
+          <el-input v-model="loginForm.name" prefix-icon="el-icon-user"></el-input>
         </el-form-item>
         <!--        密码-->
         <el-form-item prop="password">
@@ -25,6 +28,8 @@
 export default {
   data () {
     return {
+      leftColor: 0,
+      bottomColor: 203,
       loginForm: {
         name: 'admin',
         password: '123456'
@@ -37,7 +42,14 @@ export default {
       }
     }
   },
+  created() {
+      this.generateBackground()
+  },
   methods: {
+    generateBackground() {
+      this.leftColor = parseInt(Math.random() * 256)
+      this.bottomColor = parseInt(Math.random() * 256)
+    },
     resetLoginForm () {
       this.$refs.loginFormRef.resetFields()
     },
@@ -46,8 +58,8 @@ export default {
         if (!valid) return
         const { data: result } = await this.$http.post('/admins/login', this.loginForm)
         // const response = await this.$http.post('/admins/login', this.loginForm)
-        if (result.meta.status !== 200) this.$message.error('登陆失败')
-        else this.$message.success('登陆成功')
+        if (result.meta.status !== 200) this.$message.error('登录失败')
+        else this.$message.success('登录成功')
         console.log(result)
         window.sessionStorage.setItem('token', result.data.token)
         this.$router.push('/home')
@@ -59,20 +71,24 @@ export default {
 
 <style lang="less" scoped>
   .login_container {
-    background-color: #2b4b6b;
     height: 100%;
   }
 
   .login_box {
     width: 450px;
     height: 300px;
-    background-color: #fff;
-    border-radius: 3px;
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 5px;
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-
+    >h1 {
+      margin-top: 30px;
+      text-align: center;
+      font-weight: 400;
+    }
   }
   .btns{
     display: flex;
@@ -80,7 +96,7 @@ export default {
   }
   .login_form{
     position: absolute;
-    bottom: 30px;
+    bottom: 5px;
     width: 100%;
     padding: 0 20px;
     box-sizing: border-box;
