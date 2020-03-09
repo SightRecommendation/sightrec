@@ -21,10 +21,13 @@ public class CommentTests {
             content.append(i);
             content.append(" 条评论");
             comment.setContent(String.valueOf(content));
-            comment.setCreatedDate(new Date());
+            Date date = new Date();
+            date.setTime(date.getTime() + 1000*3600*5*i);
+            comment.setCreatedDate(date);
             comment.setSightId(1);
             comment.setUserId(i % 3);
             commentDao.addComment(comment);
+
         }
 //        commentDao.updateStatus(1);
     }
