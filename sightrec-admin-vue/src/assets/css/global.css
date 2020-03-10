@@ -35,6 +35,15 @@ body,
   overflow: scroll;
 }
 
+* {
+  font-family: system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Droid Sans,Helvetica Neue,Arial,sans-serif;
+}
+
+@font-face {
+  font-family:'PingFang';
+  src: url(../fonts/PingFang/PingFangSC_0.ttf);
+}
+
 textarea {
   font-family: inherit;
 }
