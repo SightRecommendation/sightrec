@@ -4,6 +4,7 @@ import Login from "./components/Login.vue";
 import Home from "./components/Home.vue";
 import Welcome from "./components/Welcome.vue";
 import Users from "./components/user/Users.vue";
+import Sights from "./components/sight/Sights.vue";
 import Comments from "./components/comment/Comments.vue";
 
 Vue.use(Router);
@@ -35,6 +36,13 @@ const router = new Router({
           component: Users,
           meta: {
             title: "用户管理 - 景点管理系统"
+          }
+        },
+        {
+          path: "/sights",
+          component: Sights,
+          meta: {
+            title: "景点管理 - 景点管理系统"
           }
         },
         {

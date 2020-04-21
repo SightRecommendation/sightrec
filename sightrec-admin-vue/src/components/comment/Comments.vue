@@ -20,12 +20,12 @@
         </el-col>
       </el-row>
 
-      <!-- 用户列表区域 -->
+      <!-- 评论列表区域 -->
       <el-table :data="commentList" border stripe>
         <el-table-column type="index"></el-table-column>
         <el-table-column label="评论内容" prop="content"></el-table-column>
         <el-table-column label="用户 ID" prop="userId" width="80px"></el-table-column>
-        <el-table-column label="景点序号" prop="sightId" width="80px"></el-table-column>
+        <el-table-column label="景点 ID" prop="sightId" width="80px"></el-table-column>
         <el-table-column label="时间" prop="createdDate" width="180px"></el-table-column>
         <el-table-column label="操作" width="150px">
           <template slot-scope="scope">
@@ -52,10 +52,10 @@
         <el-form-item label="评论内容" prop="content">
           <el-input v-model="addForm.content"></el-input>
         </el-form-item>
-        <el-form-item label="用户ID" prop="userId">
+        <el-form-item label="用户 ID" prop="userId">
           <el-input v-model.number="addForm.userId"></el-input>
         </el-form-item>
-        <el-form-item label="景点序号" prop="sightId">
+        <el-form-item label="景点 ID" prop="sightId">
           <el-input v-model.number="addForm.sightId"></el-input>
         </el-form-item>
         <el-form-item label="创建时间" prop="createdDate">
@@ -77,10 +77,10 @@
         <el-form-item label="评论内容" prop="content">
           <el-input type="textarea" autosize v-model="editForm.content"></el-input>
         </el-form-item>
-        <el-form-item label="用户ID">
+        <el-form-item label="用户 ID">
           <el-input v-model="editForm.userId" disabled></el-input>
         </el-form-item>
-        <el-form-item label="景点序号">
+        <el-form-item label="景点 ID">
           <el-input v-model="editForm.sightId" disabled></el-input>
         </el-form-item>
         <el-form-item label="创建时间">

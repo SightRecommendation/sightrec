@@ -29,4 +29,34 @@ CREATE TABLE `admin` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+CREATE TABLE `sight` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(64) NOT NULL,
+  `city` VARCHAR(64) NOT NULL,
+  `location` VARCHAR(64) NOT NULL,
+  `image_url` VARCHAR(256) NOT NULL,
+  `point` INT NOT NULL,
+  `level` INT NOT NULL,
+  `description` TEXT NOT NULL,
+  `introduction` TEXT NOT NULL,
+  `heat` FLOAT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `point_index` (`point` ASC))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
 
+CREATE TABLE `subject` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `subject_name` VARCHAR(64) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `subject_name_UNIQUE` (`subject_name` ASC))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE `sight_subject_relation` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `sight_id` INT NOT NULL,
+  `subject_id` INT NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
