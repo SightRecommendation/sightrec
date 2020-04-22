@@ -18,7 +18,6 @@ public class CommentServiceImpl implements CommentService {
     public void addComment(Comment comment) {
         try {
             int success = commentDao.addComment(comment);
-            System.out.println(comment.getContent());
             if (success <= 0) {
                 throw new RuntimeException("添加评论失败：数据库 return");
             }
@@ -39,7 +38,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<Comment> getCommentsByContent(String query) {
-        return commentDao.selectByPage(query);
+        return commentDao.selectByContent(query);
     }
 
     @Override

@@ -27,7 +27,7 @@ public interface CommentDao {
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME,
             " where status=0 and content like #{query} order by created_date desc"})
-    List<Comment> selectByPage(@Param("query") String query);
+    List<Comment> selectByContent(@Param("query") String query);
 
     @Select({"select count(id) from ", TABLE_NAME,
             " where status=0 and sight_id=#{sightId}"})
@@ -36,10 +36,6 @@ public interface CommentDao {
     @Select({"select count(id) from ", TABLE_NAME, " where status=0"})
     int getCommentCount();
 
-    /**
-     * 删除评论
-     * @param id 评论的 id
-     * */
     @Update({"update ", TABLE_NAME,
             "set status=1 where id=#{id}"})
     int updateStatus(@Param("id") int id);

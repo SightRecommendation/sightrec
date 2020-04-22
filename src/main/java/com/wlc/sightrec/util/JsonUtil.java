@@ -3,6 +3,7 @@ package com.wlc.sightrec.util;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.wlc.sightrec.entity.Comment;
+import com.wlc.sightrec.entity.Sight;
 
 import java.util.List;
 
@@ -23,6 +24,18 @@ public class JsonUtil {
         JSONArray commentArrayJson = new JSONArray();
         commentArrayJson.addAll(commentList);
         dataJson.put("comments", commentArrayJson);
+        return dataJson;
+    }
+
+    public static JSONObject getSightData(int totalPage, int pageNum, int sightNum,
+                                          List<Sight> sightList) {
+        JSONObject dataJson = new JSONObject();
+        dataJson.put("totalPage", totalPage);
+        dataJson.put("commentNum", sightNum);
+        dataJson.put("pageNum", pageNum);
+        JSONArray sightArrayJson = new JSONArray();
+        sightArrayJson.addAll(sightList);
+        dataJson.put("sights", sightArrayJson);
         return dataJson;
     }
 }

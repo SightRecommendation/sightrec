@@ -30,11 +30,11 @@ public class CommentController {
         List<Comment> commentListByPage;
         JSONObject getComments = new JSONObject();
         try {
-            query = "%" + query + "%";
             // 模糊搜索，返回所有符合条件的评论
+            query = "%" + query + "%";
             commentList = commentService.getCommentsByContent(query);
-            int commentNum = commentList.size();
             // 根据 页码 和 每页评论数 分页
+            int commentNum = commentList.size();
             int totalPage = (int) Math.ceil(commentNum * 1.0 / pageSize);
             int offset = pageSize * (pageNum - 1);
             commentListByPage = commentList.subList(offset, Math.min(commentNum, offset + pageSize));

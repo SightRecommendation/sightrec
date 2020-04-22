@@ -32,14 +32,16 @@ CREATE TABLE `admin` (
 CREATE TABLE `sight` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(64) NOT NULL,
+  `province` VARCHAR(64) NOT NULL,
   `city` VARCHAR(64) NOT NULL,
   `location` VARCHAR(64) NOT NULL,
   `image_url` VARCHAR(256) NOT NULL,
   `point` INT NOT NULL,
-  `level` INT NOT NULL,
+  `level` INT,
   `description` TEXT NOT NULL,
   `introduction` TEXT NOT NULL,
   `heat` FLOAT NOT NULL,
+  `status` INT NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   INDEX `point_index` (`point` ASC))
 ENGINE = InnoDB
