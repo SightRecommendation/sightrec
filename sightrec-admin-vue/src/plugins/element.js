@@ -4,6 +4,7 @@ import {
   Form,
   FormItem,
   Input,
+  InputNumber,
   Message,
   Container,
   Header,
@@ -36,6 +37,7 @@ Vue.use(Button)
 Vue.use(Form)
 Vue.use(FormItem)
 Vue.use(Input)
+Vue.use(InputNumber)
 Vue.use(Container)
 Vue.use(Header)
 Vue.use(Aside)
