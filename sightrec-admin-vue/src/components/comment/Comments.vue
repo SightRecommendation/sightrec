@@ -23,11 +23,11 @@
       <!-- 评论列表区域 -->
       <el-table :data="commentList" border stripe>
         <el-table-column type="index"></el-table-column>
-        <el-table-column label="评论内容" prop="content"></el-table-column>
-        <el-table-column label="用户 ID" prop="userId" width="80px"></el-table-column>
-        <el-table-column label="景点 ID" prop="sightId" width="80px"></el-table-column>
-        <el-table-column label="时间" prop="createdDate" width="180px"></el-table-column>
-        <el-table-column label="操作" width="150px">
+        <el-table-column label="内容" prop="content"></el-table-column>
+        <el-table-column label="用户 ID" prop="userId" width="65px"></el-table-column>
+        <el-table-column label="景点 ID" prop="sightId" width="65px"></el-table-column>
+        <el-table-column label="时间" prop="createdDate" width="150px"></el-table-column>
+        <el-table-column label="操作" width="120px">
           <template slot-scope="scope">
             <!-- 修改按钮 -->
             <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row.id)"></el-button>
@@ -49,7 +49,12 @@
     <el-dialog title="添加评论" :visible.sync="addDialogVisible" width="50%" @close="addDialogClosed">
       <!-- 内容主体区域 -->
       <el-form :model="addForm" :rules="addFormRules" ref="addFormRef" label-width="80px">
-        <el-form-item label="评论内容" prop="content">
+        <el-form-item label="创建时间" prop="createdDate">
+          <el-date-picker v-model="addForm.createdDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss"
+            placeholder="选择日期时间">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="内容" prop="content">
           <el-input v-model="addForm.content"></el-input>
         </el-form-item>
         <el-form-item label="用户 ID" prop="userId">
@@ -57,11 +62,6 @@
         </el-form-item>
         <el-form-item label="景点 ID" prop="sightId">
           <el-input v-model.number="addForm.sightId"></el-input>
-        </el-form-item>
-        <el-form-item label="创建时间" prop="createdDate">
-          <el-date-picker v-model="addForm.createdDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss"
-            placeholder="选择日期时间">
-          </el-date-picker>
         </el-form-item>
       </el-form>
       <!-- 底部区域 -->
@@ -74,7 +74,7 @@
     <!-- 修改评论的对话框 -->
     <el-dialog title="修改评论" :visible.sync="editDialogVisible" width="50%" @close="editDialogClosed">
       <el-form :model="editForm" :rules="editFormRules" ref="editFormRef" label-width="80px">
-        <el-form-item label="评论内容" prop="content">
+        <el-form-item label="内容" prop="content">
           <el-input type="textarea" autosize v-model="editForm.content"></el-input>
         </el-form-item>
         <el-form-item label="用户 ID">
@@ -89,7 +89,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="editDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="editUserInfo">确 定</el-button>
+        <el-button type="primary" @click="editCommentInfo">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -201,7 +201,6 @@
           if (!valid) return
           // 可以发起添加评论的网络请求
           const { data: res } = await this.$http.post('comments', this.addForm)
-
           if (res.meta.status !== 200) {
             this.$message.error('添加评论失败！')
           }
@@ -216,11 +215,9 @@
       async showEditDialog(id) {
         // console.log(id)
         const { data: res } = await this.$http.get('comments/' + id)
-
         if (res.meta.status !== 200) {
           return this.$message.error('查询评论信息失败！')
         }
-
         this.editForm = res.data
         this.editDialogVisible = true
       },
@@ -229,7 +226,7 @@
         this.$refs.editFormRef.resetFields()
       },
       // 修改评论信息并提交
-      editUserInfo() {
+      editCommentInfo() {
         this.$refs.editFormRef.validate(async valid => {
           if (!valid) return
           // 发起修改评论信息的数据请求
@@ -239,11 +236,9 @@
               content: this.editForm.content
             }
           )
-
           if (res.meta.status !== 200) {
             return this.$message.error('修改评论失败！')
           }
-
           // 关闭对话框
           this.editDialogVisible = false
           // 刷新数据列表
@@ -264,7 +259,6 @@
             type: 'warning'
           }
         ).catch(err => err)
-
         // 如果用户确认删除，则返回值为字符串 confirm
         // 如果用户取消了删除，则返回值为字符串 cancel
         // console.log(confirmResult)
@@ -272,11 +266,9 @@
           return this.$message.info('取消删除')
         }
         const { data: res } = await this.$http.delete('comments/' + id)
-
         if (res.meta.status !== 200) {
           return this.$message.error('删除评论失败！')
         }
-
         this.$message.success('删除评论成功！')
         this.getCommentList()
       },
