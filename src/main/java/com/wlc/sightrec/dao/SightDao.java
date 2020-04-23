@@ -12,9 +12,9 @@ import java.util.List;
 @Mapper
 @Repository
 public interface SightDao {
-    String TABLE_NAME = "sight ";
-    String INSERT_FIELDS = "name, province, city, location, image_url, point, level, " +
-            "description, introduction, heat, status";
+    String TABLE_NAME = "qunar_sight ";
+    String INSERT_FIELDS = "name, province, city, location, level, point, " +
+            "description, introduction, heat, image_url, subject, coordinate, status";
     String SELECT_FIELDS = "id, " + INSERT_FIELDS;
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME,
@@ -31,7 +31,8 @@ public interface SightDao {
 
     @Update({"update ", TABLE_NAME,
             "set name=#{name}, province=#{province}, city=#{city}, location=#{location}, " +
-                    "image_url=#{imageUrl}, point=#{point}, level=#{level}, " +
-                    "description=#{description}, introduction=#{introduction}, heat=#{heat} where id=#{id}"})
+                    "level=#{level}, point=#{point}, " +
+                    "description=#{description}, introduction=#{introduction}, heat=#{heat}, " +
+                    "image_url=#{imageUrl}, subject=#{subject}, coordinate=#{coordinate} where id=#{id}"})
     int updateSight(Sight sight);
 }

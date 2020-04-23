@@ -31,7 +31,7 @@ public class JsonUtil {
                                           List<Sight> sightList) {
         JSONObject dataJson = new JSONObject();
         dataJson.put("totalPage", totalPage);
-        dataJson.put("commentNum", sightNum);
+        dataJson.put("sightNum", sightNum);
         dataJson.put("pageNum", pageNum);
         JSONArray sightArrayJson = new JSONArray();
         sightArrayJson.addAll(sightList);

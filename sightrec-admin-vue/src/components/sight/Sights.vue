@@ -21,7 +21,7 @@
       </el-row>
 
       <!-- 景点列表区域 -->
-      <el-table :data="sightList" border stripe>
+      <el-table :data="parsedSightList" border stripe>
         <el-table-column type="expand">
           <template slot-scope="props">
             <el-form label-position="left" inline class="sight-table-expand">
@@ -31,8 +31,20 @@
               <el-form-item label="地址">
                 <span>{{ props.row.location }}</span>
               </el-form-item>
+              <el-form-item label="经纬度">
+                <span>{{ props.row.coordinate }}</span>
+              </el-form-item>
               <el-form-item label="缩略图">
-                <span>{{ props.row.imageUrl }}</span>
+                <span v-for="(item, index) in props.row.imageUrl" v-bind:key="index">
+                  <el-link type="primary" :href="item" target="_blank" style="margin-right: 10px;font-size: 12px;">
+                    图 {{index}}
+                  </el-link>
+                </span>
+              </el-form-item>
+              <el-form-item label="标签">
+                <span v-for="(item, index) in props.row.subject.split(',')" v-bind:key="index">
+                  <el-tag size="mini" style="margin-right: 10px;">{{ item }}</el-tag>
+                </span>
               </el-form-item>
               <el-form-item label="评分">
                 <span>{{ props.row.point }}</span>
@@ -46,9 +58,9 @@
             </el-form>
           </template>
         </el-table-column>
-        <el-table-column label="ID" prop="id" width="35px"></el-table-column>
+        <el-table-column label="ID" prop="id" width="80px"></el-table-column>
         <el-table-column label="名称" prop="name" width="150px"></el-table-column>
-        <el-table-column label="位置" prop="location" width="250px"></el-table-column>
+        <el-table-column label="位置" prop="location"></el-table-column>
         <el-table-column label="评分" prop="point" width="50px"></el-table-column>
         <el-table-column label="标语" prop="description"></el-table-column>
         <el-table-column label="操作" width="120px">
@@ -82,7 +94,8 @@
           <el-input v-model="editForm.imageUrl"></el-input>
         </el-form-item>
         <el-form-item label="评分" prop="point">
-          <el-input-number type="number" v-model="editForm.point" :precision="1" :step="0.1" :min="0" :max="5"></el-input-number>
+          <el-input-number type="number" v-model="editForm.point" :precision="1" :step="0.1" :min="0" :max="5">
+          </el-input-number>
         </el-form-item>
         <el-form-item label="标语" prop="description">
           <el-input type="textarea" autosize v-model="editForm.description"></el-input>
@@ -112,6 +125,7 @@
           pageSize: 7
         },
         sightList: [],
+        parsedSightList: [],
         sightNum: 0,
         // 控制添加用户对话框的显示与隐藏
         addDialogVisible: false,
@@ -140,6 +154,8 @@
           ]
         },
         editForm: {},
+        inputVisible: false,
+        inputValue: '',
       }
     },
     created() {
@@ -154,8 +170,16 @@
           return this.$message.error('获取景点列表失败！')
         }
         this.sightList = res.data.sights
+        this.imageUrlToJsonObject()
         this.sightNum = res.data.sightNum
         console.log(res)
+      },
+      // imageUrl 由 JSON 字符串转为 JSON 对象
+      imageUrlToJsonObject() {
+        this.parsedSightList = this.sightList
+        for (let i = 0; i < this.sightList.length; i++) {
+          this.parsedSightList[i].imageUrl = JSON.parse(this.parsedSightList[i].imageUrl)
+        }
       },
       // 搜索景点，页码要置为 1
       searchSights() {

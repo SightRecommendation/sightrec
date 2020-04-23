@@ -78,11 +78,11 @@ public class SightController {
         try {
             sightService.modifySight(changedSight);
             modifySight.put("data", null);
-            modifySight.put("meta", JsonUtil.getMeta("修改评论成功", 200));
+            modifySight.put("meta", JsonUtil.getMeta("修改景点成功", 200));
             return modifySight;
         } catch (Exception e) {
             modifySight.put("data", null);
-            modifySight.put("meta", JsonUtil.getMeta("修改评论失败", 400));
+            modifySight.put("meta", JsonUtil.getMeta("修改景点失败", 400));
             return modifySight;
         }
     }

@@ -18,6 +18,8 @@ public class Sight {
     private String level;
     private String description;
     private String introduction;
+    private String subject;
+    private String coordinate;
     private float heat;
     private int status;
 }
