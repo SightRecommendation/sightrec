@@ -7,9 +7,13 @@
           <img src="https://cdn.jsdelivr.net/gh/JingqingLin/ImageHosting/img/592aef2edd2d3.png" width="48px" />
           <span>gogo</span>
         </div>
-        <el-input placeholder="请输入内容" clearable>
-          <el-button slot="append" icon="el-icon-search" ></el-button>
-        </el-input>
+        <el-row :gutter="20">
+          <el-col :span="8">
+            <el-input placeholder="请输入内容">
+              <el-button slot="append" icon="el-icon-search"></el-button>
+            </el-input>
+          </el-col>
+        </el-row>
         <el-button type="danger" size="small" @click="logout" plain>退出</el-button>
       </el-header>
     </el-container>
