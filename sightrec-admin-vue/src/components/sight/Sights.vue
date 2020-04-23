@@ -36,9 +36,15 @@
               </el-form-item>
               <el-form-item label="缩略图">
                 <span v-for="(item, index) in props.row.imageUrl" v-bind:key="index">
-                  <el-link type="primary" :href="item" target="_blank" style="margin-right: 10px;font-size: 12px;">
+                  <el-popover
+                  placement="top-start"
+                  width="300"
+                  trigger="hover">
+                  <img :src="item" alt="" width="100%"/>
+                  <el-link slot="reference" type="primary" style="margin-right: 10px;font-size: 12px;">
                     图 {{index}}
                   </el-link>
+                </el-popover>
                 </span>
               </el-form-item>
               <el-form-item label="标签">
