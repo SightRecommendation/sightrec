@@ -1,6 +1,7 @@
 package com.wlc.sightrec.service.impl;
 
 import com.wlc.sightrec.dao.UserDao;
+import com.wlc.sightrec.entity.Admin;
 import com.wlc.sightrec.entity.User;
 import com.wlc.sightrec.service.UserService;
 import com.wlc.sightrec.util.MD5Util;
@@ -102,6 +103,56 @@ public class UserServiceImpl implements UserService {
         }catch (Exception e){
             logger.info(e.getMessage());
             throw new RuntimeException("更新用户失败！");
+        }
+    }
+
+    @Override
+    public Map<String, Object> login(User user) {
+        try {
+            User foundUser = userDao.queryUserByName(user.getName());
+            //logger.info(foundUser.getName());
+            if (foundUser == null) {
+                logger.info("用户不存在");
+                throw new RuntimeException("用户" + user.getName() + "不存在");
+            } else if (!foundUser.getPassword().equals(MD5Util.MD5(user.getPassword() + foundUser.getSalt()))){
+                logger.info(foundUser.getPassword());
+                logger.info(MD5Util.MD5(user.getPassword() + foundUser.getSalt()));
+                logger.info("密码错误");
+                throw new RuntimeException("密码错误");
+            }else{
+                logger.info(foundUser.getName());
+                Map<String, Object> data = new HashMap<>();
+                data.put("id", foundUser.getId());
+                data.put("name",foundUser.getName());
+                data.put("token","ruok");
+                return data;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("登录失败："+e.getMessage());
+        }
+    }
+
+    @Override
+    public Map<String, Object> register(User user) {
+        try {
+            User foundUser = userDao.queryUserByName(user.getName());
+            //logger.info(foundUser.getName());
+            if (foundUser == null) {
+                insertUser(user);
+                User newUser = userDao.queryUserByName(user.getName());
+                Map<String, Object> data = new HashMap<>();
+                data.put("id", newUser.getId());
+                data.put("name",newUser.getName());
+                data.put("token","ruok");
+                return data;
+                //return login(user);
+            } else{
+                throw new RuntimeException("用户名已存在");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("注册失败："+e.getMessage());
         }
     }
 }

@@ -31,7 +31,7 @@
         select count(*) from `sightrec`.`user`
     </select>
     <select id="queryUserByName" resultType="com.wlc.sightrec.entity.User">
-        select `name`,`head_url` from `sightrec`.`user`
+        select `id`,`name`,`head_url`,`salt`,`password` from `sightrec`.`user`
         where `name`=#{name}
     </select>
     <select id="queryUserById" resultType="com.wlc.sightrec.entity.User">

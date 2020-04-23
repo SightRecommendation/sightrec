@@ -20,7 +20,7 @@
         <el-row :span="4" v-for="(o, index1) in 5" :key="o" :offset="index1 > 0 ? 0 : 0">
           <el-col :span="4" v-for="(o, index2) in 5" :key="o" :offset="index2 > 0 ? 0 : 0">
             <el-card :body-style="{ padding: '0px' }">
-              <img :src="sightList[5*index1+index2].imgRul" class="image">
+              <img :src="sightList[5*index1+index2].imgUrl" class="image">
 <!--              <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="image">-->
               <div style="padding: 14px">
                 <span>好吃的汉堡</span>
@@ -57,7 +57,7 @@ export default {
       total: 0
     }
   },
-  created() {
+  created () {
     this.getSightList()
   },
   methods: {

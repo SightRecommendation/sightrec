@@ -72,4 +72,24 @@ public class UserController {
             return BaseResponse.fail(e.getMessage(),null);
         }
     }
+
+    @RequestMapping(value = {"/login"}, method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+    public BaseResponse login(@RequestBody User user) {
+        try {
+            Object data = userService.login(user);
+            return BaseResponse.ok("登录成功", data);
+        } catch (Exception e) {
+            return BaseResponse.fail(e.getMessage(), null);
+        }
+    }
+
+    @RequestMapping(value = {"/register"}, method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+    public BaseResponse register(@RequestBody User user) {
+        try {
+            Object data = userService.register(user);
+            return BaseResponse.ok("登录成功", data);
+        } catch (Exception e) {
+            return BaseResponse.fail(e.getMessage(), null);
+        }
+    }
 }
