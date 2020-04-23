@@ -31,7 +31,8 @@ import {
   Option,
   DatePicker,
   Scrollbar,
-  Link
+  Link,
+  Image
 } from 'element-ui'
 
 Vue.use(Button)
@@ -64,6 +65,7 @@ Vue.use(Option)
 Vue.use(DatePicker)
 Vue.use(Scrollbar)
 Vue.use(Link)
+Vue.use(Image)
 
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm
