@@ -14,14 +14,13 @@
             </el-input>
           </el-col>
         </el-row>
-        <el-button type="danger" size="small" @click="logout" plain>退出</el-button>
       </el-header>
       <el-main>
-        <el-row :span="4" v-for="(o, index1) in 5" :key="o" :offset="index1 > 0 ? 0 : 0">
-          <el-col :span="4" v-for="(o, index2) in 5" :key="o" :offset="index2 > 0 ? 0 : 0">
-            <el-card :body-style="{ padding: '0px' }">
-              <img :src="sightList[5*index1+index2].imgRul" class="image">
-<!--              <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="image">-->
+        <el-row>
+          <el-col :span="4" v-for="(sight, index1) in parsedSightList" :key="index1">
+            <span v-for="(imageUrl, index2) in sight.imageUrl" :key="index2">
+              <el-card v-if="index2 < 1" :body-style="{ padding: '0px' }">
+              <img :src="imageUrl" class="image">
               <div style="padding: 14px">
                 <span>好吃的汉堡</span>
                 <div class="bottom clearfix">
@@ -29,14 +28,11 @@
                   <el-button type="text" class="button">操作按钮</el-button>
                 </div>
               </div>
-            </el-card>
+              </el-card>
+            </span>
           </el-col>
         </el-row>
-        <!-- 分页区域 -->
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="queryInfo.pagenum" :page-sizes="[25]" :page-size="queryInfo.pagesize" layout="total, sizes, prev, pager, next, jumper" :total="total">
-        </el-pagination>
       </el-main>
-      <el-footer></el-footer>
     </el-container>
   </el-scrollbar>
 </template>
@@ -49,15 +45,16 @@ export default {
       queryInfo: {
         query: '',
         // 当前的页数
-        pagenum: 1,
+        pageNum: 1,
         // 当前每页显示多少条数据
-        pagesize: 25
+        pageSize: 5
       },
       sightList: [],
+      parsedSightList: [],
       total: 0
     }
   },
-  created() {
+  created () {
     this.getSightList()
   },
   methods: {
@@ -69,20 +66,17 @@ export default {
         return this.$message.error('获取景点列表失败！')
       }
       this.sightList = res.data.sights
+      this.imageUrlToJsonObject()
       this.total = res.data.total
       console.log(res)
     },
-    // 监听 pagesize 改变的事件
-    handleSizeChange (newSize) {
-      // console.log(newSize)
-      this.queryInfo.pagesize = newSize
-      this.getSightList()
-    },
-    // 监听 页码值 改变的事件
-    handleCurrentChange (newPage) {
-      console.log(newPage)
-      this.queryInfo.pagenum = newPage
-      this.getSightList()
+    // imageUrl 由 JSON 字符串转为 JSON 对象
+    imageUrlToJsonObject () {
+      this.parsedSightList = this.sightList
+      for (let i = 0; i < this.sightList.length; i++) {
+        this.parsedSightList[i].imageUrl = JSON.parse(this.parsedSightList[i].imageUrl)
+      }
+      console.log(this.parsedSightList)
     }
   }
 }
