@@ -73,6 +73,11 @@ body,
   src: url(../fonts/Inter/Inter-Regular.woff);
 }
 
+@font-face {
+  font-family: 'Miriam Libre';
+  src: url(../fonts/Miriam_Libre/MiriamLibre-Regular.ttf);
+}
+
 textarea {
   font-family: inherit;
 }

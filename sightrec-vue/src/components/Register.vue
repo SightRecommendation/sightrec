@@ -1,8 +1,8 @@
 <template>
   <div class="login_container" :style="{'background': 'linear-gradient(to left bottom, hsl(' + leftColor + ', 100%, 85%) 0%,hsl(' + bottomColor + ', 100%, 85%) 100%)'}">
     <div class="login_box">
-      <h1>
-        sightrec
+      <h1 style="font-family: 'Miriam Libre';">
+        SightLens
       </h1>
       <!--      登陆表单区域-->
       <el-form ref="loginFormRef" :model="loginForm" :rules="loginFormRules" label-width="0px" class="login_form">
