@@ -78,6 +78,16 @@ body,
   src: url(../fonts/Miriam_Libre/MiriamLibre-Regular.ttf);
 }
 
+@font-face {
+  font-family: 'iconfont';  /* project id 1780999 */
+  src: url('//at.alicdn.com/t/font_1780999_3sur92m5i5e.eot');
+  src: url('//at.alicdn.com/t/font_1780999_3sur92m5i5e.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_1780999_3sur92m5i5e.woff2') format('woff2'),
+  url('//at.alicdn.com/t/font_1780999_3sur92m5i5e.woff') format('woff'),
+  url('//at.alicdn.com/t/font_1780999_3sur92m5i5e.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_1780999_3sur92m5i5e.svg#iconfont') format('svg');
+}
+
 textarea {
   font-family: inherit;
 }

@@ -59,7 +59,7 @@
         <el-divider></el-divider>
         <h2>为你推荐</h2>
         <el-row>
-          <el-col :span="4" v-for="(sight, index1) in recommendedList" :key="index1">
+          <el-col :span="4" v-for="(sight, index1) in parsedrecommendedList" :key="index1">
             <span v-for="(imageUrl, index2) in sight.imageUrl" :key="index2">
               <!-- 只显示每个景点的第一张图片 -->
               <el-card shadow="hover" v-if="index2 < 1" :body-style="{ padding: '0px' }">

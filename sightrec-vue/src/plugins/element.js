@@ -36,7 +36,9 @@ import {
   Footer,
   Divider,
   Carousel,
-  CarouselItem
+  CarouselItem,
+  Tabs,
+  TabPane
 } from 'element-ui'
 
 Vue.use(Button)
@@ -74,6 +76,8 @@ Vue.use(Image)
 Vue.use(Divider)
 Vue.use(Carousel)
 Vue.use(CarouselItem)
+Vue.use(Tabs)
+Vue.use(TabPane)
 
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm
