@@ -44,7 +44,8 @@ import {
   Dropdown,
   DropdownMenu,
   DropdownItem,
-  Avatar
+  Avatar,
+  Upload
 } from 'element-ui'
 
 Vue.use(Button)
@@ -90,6 +91,7 @@ Vue.use(Dropdown)
 Vue.use(DropdownMenu)
 Vue.use(DropdownItem)
 Vue.use(Avatar)
+Vue.use(Upload)
 
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm
