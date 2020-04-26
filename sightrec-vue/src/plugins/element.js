@@ -38,7 +38,13 @@ import {
   Carousel,
   CarouselItem,
   Tabs,
-  TabPane
+  TabPane,
+  Rate,
+  Badge,
+  Dropdown,
+  DropdownMenu,
+  DropdownItem,
+  Avatar
 } from 'element-ui'
 
 Vue.use(Button)
@@ -78,6 +84,12 @@ Vue.use(Carousel)
 Vue.use(CarouselItem)
 Vue.use(Tabs)
 Vue.use(TabPane)
+Vue.use(Rate)
+Vue.use(Badge)
+Vue.use(Dropdown)
+Vue.use(DropdownMenu)
+Vue.use(DropdownItem)
+Vue.use(Avatar)
 
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm
