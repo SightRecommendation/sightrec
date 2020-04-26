@@ -4,8 +4,10 @@
       <!-- 头部区域 -->
       <el-header>
         <div>
-          <img src="https://cdn.jsdelivr.net/gh/JingqingLin/ImageHosting/img/592aef2edd2d3.png" width="48px" />
-          <span style="font-family: 'Miriam Libre';">SightLens</span>
+          <el-link class="link-logo" :underline="false" href="../">
+            <img src="https://cdn.jsdelivr.net/gh/JingqingLin/ImageHosting/img/592aef2edd2d3.png" width="48px" />
+          </el-link>
+          <span class="span-logo">SightLens</span>
         </div>
         <el-row :gutter="20">
           <el-col :span="8">
@@ -14,11 +16,19 @@
             </el-input>
           </el-col>
         </el-row>
-        <el-button class="button-user" icon="el-icon-user" circle></el-button>
+        <el-dropdown trigger="click">
+          <el-badge :value="1">
+            <el-button class="button-user" icon="el-icon-user" circle></el-button>
+          </el-badge>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item icon="el-icon-setting">设置</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-delete">退出</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
       </el-header>
       <el-main>
         <el-card class="box-card">
-          <el-row :gutter="20" style="margin-left: -25px;">
+          <el-row type="flex" :gutter="10" style="margin-left: -25px;">
             <el-col :span="13">
               <el-carousel trigger="click" height="400px">
                 <el-carousel-item v-for="item in parsedsightDetail.imageUrl" :key="item">
@@ -29,33 +39,46 @@
             <el-col :span="10">
               <el-row>
                 <span style="font-size: 25px;font-weight: 400;color: #409eff;">{{ parsedsightDetail.name }}</span>
-                <span> {{ parsedsightDetail.level }}</span>
-                <p style="font-size: 15px;color: #999;">{{ parsedsightDetail.description }}</p><br />
-                <p style="margin-top: 10px;">
-                  <i class="el-icon-location-outline"></i><span style="color: #999;"> 位置：</span>
+                <div style="float: right;">
+                  <!-- @mouseout 鼠标移开后：若用户打分，那肯定执行了 click，则显示用户评分；若未打分，则为 0 颗星 -->
+                  <!-- <ul class="rate-stars">
+                    <li><span style="font-size:small;position: relative;margin-right: 10px;">打分：</span></li>
+                    <li v-for="(i, index) in starList" :key="index" @click="clickStars(index)" @mouseover="starNums=index+1" @mouseout="mouseOutStars(index)">
+                      <img class="stars" :src="starNums>index?starLight:starGray" width="50%"/>
+                    </li>
+                  </ul> -->
+                  <el-rate v-model="userRate" @change="changeRate"></el-rate>
+                </div>
+                <span style="font-size: small;"> {{ parsedsightDetail.level }}</span>
+                <p style="font-size: 15px;color: #909399;">{{ parsedsightDetail.description }}</p><br />
+                <p>
+                  <i class="el-icon-location-outline"></i><span style="color: #909399;"> 位置：</span>
                   <span>{{ parsedsightDetail.location }}</span>
                 </p>
                 <p>
-                  <i class="el-icon-s-data"></i><span style="color: #999;"> 评分：</span>
+                  <i class="el-icon-s-data"></i><span style="color: #909399;"> 评分：</span>
                   <span style="font-size: 19px;color: #ff6600;">{{ parsedsightDetail.point }}</span><span> / 5 分</span>
                 </p>
                 <p>
-                  <i class="el-icon-sunny"></i><span style="color: #999;"> 热度：</span>
+                  <i class="el-icon-sunny"></i><span style="color: #909399;"> 热度：</span>
                   <span>{{ parsedsightDetail.heat }}</span>
                 </p>
                 <p>
-                  <i class="el-icon-collection-tag"></i><span style="color: #999;"> 标签：</span>
-                  <span v-for="(item, index) in parsedsightDetail.subject.split(',')" v-bind:key="index">
+                  <i class="el-icon-collection-tag"></i><span style="color: #909399;"> 标签：</span>
+                  <!-- 防止 split 出现 undefined -->
+                  <span v-for="item in (parsedsightDetail.subject || '').split(',')" :key="item">
                     <el-tag size="small" style="margin-right: 10px;">{{ item }}</el-tag>
                   </span>
                 </p><br />
-                <div style="margin-top: 50px;" class="button-shared">
-                  <el-button style="margin-right: 140px;" type="primary" icon="el-icon-shopping-cart-2">收藏景点</el-button>
-                  <i class="el-icon-share"></i><span style="color: #999;" > 分享：</span>
-                  <i class="iconfont" style="font-size: 35px;">&#xe6df;</i>
-                  <i class="iconfont" style="font-size: 35px;">&#xe6e0;</i>
-                  <i class="iconfont" style="font-size: 35px;">&#xe6de;</i>
-                  <i class="iconfont" style="font-size: 35px;">&#xe6dc;</i>
+                <el-button style="position: relative;margin-right: 225px;" type="primary" icon="el-icon-shopping-cart-2">收藏景点</el-button>
+                <div class="button-shared">
+                  <div>
+                    <i class="el-icon-share"></i><span style="color: #909399;margin-right: 70px;" > 分享：</span>
+                  </div>
+                  <i class="iconfont" style="color: #7ad238;font-size: 35px;">&#xe6df;</i>
+                  <i class="iconfont" style="color: #1bc1fa;font-size: 35px;">&#xe6e0;</i>
+                  <i class="iconfont" style="color: #e6152c;font-size: 35px;">&#xe6de;</i>
+                  <i class="iconfont" style="color: #00b51d;font-size: 35px;">&#xe6dc;</i>
                 </div>
               </el-row>
             </el-col>
@@ -63,13 +86,45 @@
         </el-card>
         <el-divider></el-divider>
         <el-card>
-          <el-tabs v-model="activeName" @tab-click="handleClick">
+          <el-tabs v-model="activeName">
             <el-tab-pane label="景点介绍" name="first">
-              <span slot="label"><i class="el-icon-document"></i> 景点介绍</span>
+              <span style="font-size: medium;" slot="label"><i class="el-icon-document"></i> 景点介绍</span>
               <p style="line-height: 30px;padding: 20px;">{{ parsedsightDetail.introduction }}</p>
             </el-tab-pane>
             <el-tab-pane label="用户评论" name="second">
-              <span slot="label"><i class="el-icon-s-comment"></i> 用户评论</span>
+              <span style="font-size: medium;" slot="label"><i class="el-icon-s-comment"></i> 用户评论</span>
+              <div v-for="(item, index) in commentList" :key="index">
+                <el-card class="card-comment" shadow="never">
+                  <p>
+                    <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
+                    <span style="position: relative;margin-left: 10px;bottom: 13px;">匿名游客</span>
+                    <span style="font-size: 12px;float: right;color: #909399;">{{ item.createdDate }}</span>
+                  </p>
+                  <p style="font-size: 14px;">{{ item.content }}</p>
+                </el-card>
+              </div>
+              <el-card class="card-comment" shadow="never">
+                <div style="display:flex">
+                  <el-avatar style="margin-right: 10px;" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
+                  <el-input
+                  type="textarea"
+                  placeholder="你的想法 ~"
+                  :autosize="{ minRows: 5}"
+                  v-model="userComment"
+                  maxlength="1200"
+                  show-word-limit
+                  >
+                  </el-input>
+                </div>
+                <div align="right">
+                  <el-button type="primary" icon="el-icon-check" style="position: relative;margin-top: 10px;">写好了</el-button>
+                </div>
+              </el-card>
+              <!-- 分页区域 -->
+              <el-pagination :hide-on-single-page="true" @size-change="handleSizeChange" @current-change="handleCurrentChange"
+              :current-page="commentQueryInfo.pageNum" :page-sizes="[5, 10, 20]" :page-size="commentQueryInfo.pageSize"
+              layout="total, sizes, prev, pager, next, jumper" :total="commentNum">
+              </el-pagination>
             </el-tab-pane>
           </el-tabs>
         </el-card>
@@ -110,6 +165,7 @@
 export default {
   data () {
     return {
+      id: 2709,
       sightDetail: {},
       parsedsightDetail: {},
       activeName: 'first',
@@ -121,12 +177,28 @@ export default {
         // 当前每页显示多少条数据
         pageSize: 5
       },
+      commentQueryInfo: {
+        sightId: 2709,
+        pageNum: 1,
+        pageSize: 5
+      },
+      commentNum: 0,
+      commentList: [],
+      userList: [],
+      userComment: '',
       similarList: [],
-      parsedSimilarList: []
+      parsedSimilarList: [],
+      // starList: [0, 1, 2, 3, 4],
+      // starNums: 0,
+      // isClickedStar: false,
+      userRate: 0,
+      starGray: require('../assets/images/star_hollow_hover@2x.png'),
+      starLight: require('../assets/images/star_onmouseover@2x.png')
     }
   },
   created () {
-    this.getSightDetail(2744)
+    this.getSightDetail(this.id)
+    this.getSightCommentList()
     this.getSimilarSightList()
   },
   methods: {
@@ -140,22 +212,67 @@ export default {
       this.sightDetail = res.data
       this.parsedsightDetail = this.sightDetail
       this.parsedsightDetail.imageUrl = JSON.parse(this.parsedsightDetail.imageUrl)
-      console.log(this.parsedsightDetail.imageUrl)
+    },
+    async getSightCommentList () {
+      const { data: res } = await this.$http.get('comments/sight', {
+        params: this.commentQueryInfo
+      })
+      if (res.meta.status !== 200) {
+        return this.$message.error('获取评论失败！')
+      }
+      this.commentList = res.data.comments
+      this.commentNum = res.data.commentNum
     },
     async getSimilarSightList () {
       const { data: res } = await this.$http.get('sights', {
         params: this.similarQueryInfo
       })
       if (res.meta.status !== 200) {
-        return this.$message.error('获取景点列表失败！')
+        return this.$message.error('获取相似景点失败！')
       }
       this.similarList = res.data.sights
       this.parsedSimilarList = this.similarList
-      console.log('highrated' + res)
       for (let i = 0; i < this.similarList.length; i++) {
         this.parsedSimilarList[i].imageUrl = JSON.parse(this.parsedSimilarList[i].imageUrl)
       }
+    },
+    async getCommentUserList () {
+      const { data: res } = await this.$http.get('users', {
+        params: this.similarQueryInfo
+      })
+      if (res.meta.status !== 200) {
+        return this.$message.error('获取相似景点失败！')
+      }
+      this.similarList = res.data.sights
+      this.parsedSimilarList = this.similarList
+      for (let i = 0; i < this.similarList.length; i++) {
+        this.parsedSimilarList[i].imageUrl = JSON.parse(this.parsedSimilarList[i].imageUrl)
+      }
+    },
+    // 监听 pageSize 改变的事件
+    handleSizeChange (newSize) {
+      this.commentQueryInfo.pageSize = newSize
+      this.getSightCommentList()
+    },
+    // 监听 页码值 改变的事件
+    handleCurrentChange (newPage) {
+      this.commentQueryInfo.pageNum = newPage
+      this.getSightCommentList()
+    },
+    changeRate () {
     }
+    // clickStars (i) {
+    //   this.starNums = i + 1
+    //   this.isClickedStar = true
+    //   this.userRate = i + 1
+    // },
+    // mouseOutStars (i) {
+    //   if (this.isClickedStar === false) {
+    //     this.starNums = 0
+    //   } else {
+    //     this.starNums = this.userRate
+    //   }
+    // }
   }
 }
 </script>
@@ -184,20 +301,20 @@ export default {
     top: 0;
     width: 100%;
 
-    >div {
-      margin-left: 10px;
-      display: flex;
-      align-items: center;
-
-      span {
-        margin-left: 10px;
-      }
-    }
-
     .el-input {
       margin-left: 30px;
       margin-right: 700px;
     }
+  }
+
+  .link-logo {
+    display: flex;
+    align-items: center;
+  }
+
+  .span-logo {
+    font-family: 'Miriam Libre';
+    margin-left: 10px;
   }
 
   .el-main {
@@ -224,7 +341,7 @@ export default {
   }
   .card-time {
     font-size: 13px;
-    color: #999;
+    color: #909399;
   }
   .card-bottom {
     margin-top: 13px;
@@ -258,12 +375,14 @@ export default {
   .button-shared {
     position: relative;
     text-align: right;
-    bottom: 40px;
-    right: 20px;
   }
 
-  .iconfont {
-    margin-top: 20px;
+  .card-comment {
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-bottom: 10px !important;
   }
 
   .el-footer {
@@ -275,4 +394,15 @@ export default {
   .sight-scroll {
     height: 100%;
   }
+
+  /* .rate-stars li{
+    float: left;
+    margin-right: -0.9rem;
+    list-style-type: none;
+    cursor: pointer;
+  }
+  .stars {
+    position: relative;
+    top: 3px;
+  } */
 </style>

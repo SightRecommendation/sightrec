@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './components/Home.vue'
+import UserHome from './components/UserHome.vue'
 import Login from './components/Login.vue'
 import Register from './components/Register.vue'
 import SightDetail from './components/SightDetail.vue'
@@ -13,6 +14,13 @@ const router = new Router({
       component: Home,
       meta: {
         title: '主页 - SightLens'
+      }
+    },
+    {
+      path: '/user',
+      component: UserHome,
+      meta: {
+        title: '个人中心 - SightLens'
       }
     },
     {

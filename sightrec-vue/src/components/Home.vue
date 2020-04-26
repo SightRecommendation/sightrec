@@ -4,8 +4,10 @@
       <!-- 头部区域 -->
       <el-header>
         <div>
-          <img src="https://cdn.jsdelivr.net/gh/JingqingLin/ImageHosting/img/592aef2edd2d3.png" width="48px" />
-          <span style="font-family: 'Miriam Libre';">SightLens</span>
+          <el-link class="link-logo" :underline="false" href="../">
+            <img src="https://cdn.jsdelivr.net/gh/JingqingLin/ImageHosting/img/592aef2edd2d3.png" width="48px" />
+          </el-link>
+          <span class="span-logo">SightLens</span>
         </div>
         <el-row :gutter="20">
           <el-col :span="8">
@@ -14,7 +16,15 @@
             </el-input>
           </el-col>
         </el-row>
-        <el-button class="button-user" icon="el-icon-user" circle></el-button>
+        <el-dropdown trigger="click">
+          <el-badge :value="1">
+            <el-button class="button-user" icon="el-icon-user" circle></el-button>
+          </el-badge>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item icon="el-icon-setting">设置</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-delete">退出</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
       </el-header>
       <el-main>
         <h2>最受欢迎</h2>
@@ -202,20 +212,20 @@ export default {
     top: 0;
     width: 100%;
 
-    >div {
-      margin-left: 10px;
-      display: flex;
-      align-items: center;
-
-      span {
-        margin-left: 10px;
-      }
-    }
-
     .el-input {
       margin-left: 30px;
       margin-right: 700px;
     }
+  }
+
+  .link-logo {
+    display: flex;
+    align-items: center;
+  }
+
+  .span-logo {
+    font-family: 'Miriam Libre';
+    margin-left: 10px;
   }
 
   .el-main {
@@ -242,7 +252,7 @@ export default {
   }
   .card-time {
     font-size: 13px;
-    color: #999;
+    color: #909399;
   }
   .card-bottom {
     margin-top: 13px;
