@@ -25,6 +25,11 @@ public class SightServiceImpl implements SightService {
     }
 
     @Override
+    public List<Sight> getSightsByTag(String query) {
+        return sightDao.selectByTag(query);
+    }
+
+    @Override
     public void deleteSight(int id) {
         try {
             int success = sightDao.updateStatus(id);

@@ -38,4 +38,16 @@ public class JsonUtil {
         dataJson.put("sights", sightArrayJson);
         return dataJson;
     }
+
+    public static JSONArray getSearchedSightData(List<Sight> sightList) {
+        JSONArray sightArrayJson = new JSONArray();
+        for (Sight sight : sightList) {
+            JSONObject dataJson = new JSONObject();
+            dataJson.put("value", sight.getName());
+            dataJson.put("address", sight.getCity());
+            dataJson.put("id", sight.getId());
+            sightArrayJson.add(dataJson);
+        }
+        return sightArrayJson;
+    }
 }

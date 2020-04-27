@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 @RestController
 public class SightController {
@@ -19,10 +21,10 @@ public class SightController {
     SightService sightService;
 
     @RequestMapping(path = {"/sights"}, method = {RequestMethod.GET})
-    public JSONObject getComments(@RequestParam("query") String query,
-                                  @RequestParam("pageNum") int pageNum,
-                                  @RequestParam("pageSize") int pageSize,
-                                  HttpServletRequest request, HttpServletResponse response) {
+    public JSONObject getSights(@RequestParam("query") String query,
+                                @RequestParam("pageNum") int pageNum,
+                                @RequestParam("pageSize") int pageSize,
+                                HttpServletRequest request, HttpServletResponse response) {
         // token 验证没写
         // query 为搜索参数
         String auth = request.getHeader("Authorization");
@@ -49,9 +51,76 @@ public class SightController {
         }
     }
 
+    @RequestMapping(path = {"/sights/search"}, method = {RequestMethod.GET})
+    public JSONObject getSearchedSights(@RequestParam("query") String query,
+                                        @RequestParam("pageSize") int pageSize,
+                                        HttpServletRequest request, HttpServletResponse response) {
+        // token 验证没写
+        // query 为搜索参数
+        String auth = request.getHeader("Authorization");
+
+        List<Sight> sightList;
+        List<Sight> sightListByPage;
+        JSONObject getSights = new JSONObject();
+        try {
+            if ("".equals(query)) {
+                sightList = new ArrayList<>();
+            } else {
+                // 模糊搜索，返回所有符合条件的景点
+                query = "%" + query + "%";
+                sightList = sightService.getSightsByName(query);
+            }
+            int sightNum = sightList.size();
+            int offset = 0;
+            sightListByPage = sightList.subList(offset, Math.min(sightNum, offset + pageSize));
+            getSights.put("data", JsonUtil.getSearchedSightData(sightListByPage));
+            getSights.put("meta", JsonUtil.getMeta("获取景点列表成功", 200));
+            return getSights;
+        } catch (Exception e) {
+            getSights.put("data", null);
+            getSights.put("meta", JsonUtil.getMeta("获取景点列表失败", 400));
+            return getSights;
+        }
+    }
+
+    @RequestMapping(path = {"/sights/similar"}, method = {RequestMethod.GET})
+    public JSONObject getSimilarSights(@RequestParam("query") String query,
+                                       @RequestParam("pageNum") int pageNum,
+                                       @RequestParam("pageSize") int pageSize,
+                                       HttpServletRequest request, HttpServletResponse response) {
+        // token 验证没写
+        // query 为搜索参数
+        String auth = request.getHeader("Authorization");
+
+        List<Sight> sightList;
+        List<Sight> sightListByPage = new ArrayList<>(pageNum);
+        JSONObject getSights = new JSONObject();
+        try {
+            // 模糊搜索，返回所有符合条件的景点
+            query = "%" + query + "%";
+            sightList = sightService.getSightsByTag(query);
+            // 根据 页码 和 每页景点数 分页
+            int sightNum = sightList.size();
+            int totalPage = (int) Math.ceil(sightNum * 1.0 / pageSize);
+            int offset = pageSize * (pageNum - 1);
+            List<Integer> rand = new Random().ints(0, sightNum).distinct().limit(sightNum).boxed().collect(Collectors.toList());
+            for (int i = 0; i < Math.min(pageSize, sightNum); i++) {
+                sightListByPage.add(sightList.get(rand.get(i)));
+            }
+//            sightListByPage = sightList.subList(offset, Math.min(sightNum, offset + pageSize));
+            getSights.put("data", JsonUtil.getSightData(totalPage, pageNum, sightNum, sightListByPage));
+            getSights.put("meta", JsonUtil.getMeta("获取景点列表成功", 200));
+            return getSights;
+        } catch (Exception e) {
+            getSights.put("data", null);
+            getSights.put("meta", JsonUtil.getMeta("获取景点列表失败", 400));
+            return getSights;
+        }
+    }
+
     @RequestMapping(path = {"/sights/{id}"}, method = {RequestMethod.GET})
-    public JSONObject getComment(@PathVariable("id") int id,
-                                 HttpServletRequest request, HttpServletResponse response) {
+    public JSONObject getSight(@PathVariable("id") int id,
+                               HttpServletRequest request, HttpServletResponse response) {
         // token 验证没写
         String auth = request.getHeader("Authorization");
 
@@ -59,7 +128,7 @@ public class SightController {
         try {
             Sight sightById = sightService.getSightById(id);
             getSight.put("data", sightById);
-            getSight.put("meta", JsonUtil.getMeta("获取评论成功", 200));
+            getSight.put("meta", JsonUtil.getMeta("获取景点列表成功", 200));
             return getSight;
         } catch (Exception e) {
             getSight.put("data", null);
@@ -69,8 +138,8 @@ public class SightController {
     }
 
     @RequestMapping(path = {"/sights/{id}"}, method = {RequestMethod.PUT})
-    public JSONObject modifyComment(@PathVariable("id") int id, @RequestBody Sight changedSight,
-                                    HttpServletRequest request, HttpServletResponse response) {
+    public JSONObject modifySight(@PathVariable("id") int id, @RequestBody Sight changedSight,
+                                  HttpServletRequest request, HttpServletResponse response) {
         // token 验证没写
         String auth = request.getHeader("Authorization");
 
@@ -88,8 +157,8 @@ public class SightController {
     }
 
     @RequestMapping(path = {"/sights/{id}"}, method = {RequestMethod.DELETE})
-    public JSONObject deleteComment(@PathVariable("id") int id,
-                                    HttpServletRequest request, HttpServletResponse response) {
+    public JSONObject deleteSight(@PathVariable("id") int id,
+                                  HttpServletRequest request, HttpServletResponse response) {
         // token 验证没写
         String auth = request.getHeader("Authorization");
 

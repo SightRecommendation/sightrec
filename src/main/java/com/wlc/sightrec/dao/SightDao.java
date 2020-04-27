@@ -25,6 +25,10 @@ public interface SightDao {
             " where status=0 and name like #{query} order by id asc"})
     List<Sight> selectByName(@Param("query") String query);
 
+    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME,
+            " where status=0 and subject like #{query} order by id asc"})
+    List<Sight> selectByTag(@Param("query") String query);
+
     @Update({"update ", TABLE_NAME,
             "set status=1 where id=#{id}"})
     int updateStatus(@Param("id") int id);
