@@ -12,12 +12,12 @@
         </el-form-item>
         <!--        密码-->
         <el-form-item prop="password">
-          <el-input v-model="loginForm.password" prefix-icon="el-icon-lock" type="password"></el-input>
+          <el-input v-model="loginForm.password" prefix-icon="el-icon-lock" show-password></el-input>
         </el-form-item>
         <!--        按钮-->
         <el-form-item class="btns">
           <el-button type="primary" @click="login">登录</el-button>
-          <el-button type="info" @click="resetLoginForm">重置</el-button>
+          <el-button type="primary" @click="register" plain>注册</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -36,7 +36,7 @@ export default {
       },
       loginFormRules: {
         name: [{ required: true, message: '请输入用户名', trigger: 'blur' },
-          { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }],
+          { min: 3, max: 15, message: '长度在 3 到 15 个字符', trigger: 'blur' }],
         password: [{ required: true, message: '请输入密码', trigger: 'blur' },
           { min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur' }]
       }
@@ -50,20 +50,19 @@ export default {
       this.leftColor = parseInt(Math.random() * 256)
       this.bottomColor = parseInt(Math.random() * 256)
     },
-    resetLoginForm () {
-      this.$refs.loginFormRef.resetFields()
-    },
     login () {
       this.$refs.loginFormRef.validate(async valid => {
         if (!valid) return
         const { data: result } = await this.$http.post('/users/login', this.loginForm)
-        // const response = await this.$http.post('/admins/login', this.loginForm)
         if (result.meta.status !== 200) this.$message.error('登录失败')
         else this.$message.success('登录成功')
         console.log(result)
         window.sessionStorage.setItem('token', result.data.token)
-        this.$router.push('/home')
+        this.$router.push('/')
       })
+    },
+    register () {
+      this.$router.push('/register')
     }
   }
 }
@@ -73,7 +72,6 @@ export default {
   .login_container {
     height: 100%;
     background-image: url(../assets/images/bluredYosemite.jpg);
-
   }
   .login_box {
     width: 450px;

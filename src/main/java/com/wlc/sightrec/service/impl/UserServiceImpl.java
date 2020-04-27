@@ -124,7 +124,7 @@ public class UserServiceImpl implements UserService {
                 Map<String, Object> data = new HashMap<>();
                 data.put("id", foundUser.getId());
                 data.put("name",foundUser.getName());
-                data.put("token","ruok");
+                data.put("token",foundUser.getPassword());
                 return data;
             }
         } catch (Exception e) {
@@ -144,7 +144,7 @@ public class UserServiceImpl implements UserService {
                 Map<String, Object> data = new HashMap<>();
                 data.put("id", newUser.getId());
                 data.put("name",newUser.getName());
-                data.put("token","ruok");
+                data.put("token",newUser.getPassword());
                 return data;
                 //return login(user);
             } else{

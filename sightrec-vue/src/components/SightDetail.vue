@@ -17,7 +17,7 @@
           </el-col>
         </el-row>
         <el-dropdown trigger="click">
-          <el-badge :value="1">
+          <el-badge :value="0">
             <el-button class="button-user" icon="el-icon-user" circle></el-button>
           </el-badge>
           <el-dropdown-menu slot="dropdown">

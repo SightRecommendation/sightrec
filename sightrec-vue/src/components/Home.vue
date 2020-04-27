@@ -16,13 +16,13 @@
             </el-input>
           </el-col>
         </el-row>
-        <el-dropdown trigger="click">
-          <el-badge :value="1">
+        <el-dropdown @command="handleCommand" trigger="click">
+          <el-badge :value="0">
             <el-button class="button-user" icon="el-icon-user" circle></el-button>
           </el-badge>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item icon="el-icon-setting">设置</el-dropdown-item>
-            <el-dropdown-item icon="el-icon-delete">退出</el-dropdown-item>
+            <el-dropdown-item command="logout" icon="el-icon-delete">退出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </el-header>
@@ -182,6 +182,12 @@ export default {
       console.log('highrated' + res)
       for (let i = 0; i < this.recommendedList.length; i++) {
         this.parsedrecommendedList[i].imageUrl = JSON.parse(this.parsedrecommendedList[i].imageUrl)
+      }
+    },
+    handleCommand (command) {
+      if (command === 'logout') {
+        window.sessionStorage.clear()
+        this.$router.push('/login')
       }
     }
   }

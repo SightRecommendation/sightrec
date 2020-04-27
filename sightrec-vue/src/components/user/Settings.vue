@@ -1,7 +1,7 @@
 <template>
   <div class="settings">
     <el-card>
-      <el-form style="width: 40%;" :model="userForm" ref="userFormRef" :rules="userFormRules" label-width="80px">
+      <el-form style="width: 45%;" :model="userForm" ref="userFormRef" :rules="userFormRules" label-width="100px">
         <!-- prop 为 userFormRules 中的验证规则 -->
         <el-form-item label="用户名" prop="userName">
           <el-input maxlength="12" show-word-limit v-model="userForm.userName" clearable></el-input>
@@ -39,9 +39,10 @@
           <el-input placeholder="确认密码" v-model="userForm.userConfirmPwd" show-password clearable></el-input>
           <span style="font-size: small;color: #909399;">确认密码</span>
         </el-form-item>
-        <div align="right">
+        <el-form-item>
           <el-button type="primary">保存修改</el-button>
-        </div>
+          <el-button @click="resetForm('userFormRef')">重 置</el-button>
+        </el-form-item>
       </el-form>
     </el-card>
   </div>
@@ -94,6 +95,9 @@ export default {
         this.$message.error('上传头像图片大小不能超过 2MB!')
       }
       return isJPG && isLt2M
+    },
+    resetForm (ruleForm) {
+      this.$refs[ruleForm].resetFields()
     }
   }
 }
