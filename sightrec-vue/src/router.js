@@ -93,7 +93,7 @@ router.beforeEach((to, from, next) => {
   /* 路由发生变化修改页面title */
 
   document.title = '登录 - SightLens'
-  if (to.path === '/login') {
+  if (to.path === '/login' || to.path === '/register') {
     return next()
   }
   // 获取token
