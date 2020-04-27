@@ -1,171 +1,134 @@
 <template>
-  <el-scrollbar class="sight-scroll">
-    <el-container class="sight-container">
-      <!-- 头部区域 -->
-      <el-header>
-        <div>
-          <el-link class="link-logo" :underline="false" href="../">
-            <img src="https://cdn.jsdelivr.net/gh/JingqingLin/ImageHosting/img/592aef2edd2d3.png" width="48px" />
-          </el-link>
-          <span class="span-logo">SightLens</span>
-        </div>
-        <el-row :gutter="20">
-          <el-col :span="8">
-            <el-input placeholder="请输入景点名称">
-              <el-button slot="append" icon="el-icon-search"></el-button>
-            </el-input>
-          </el-col>
-        </el-row>
-        <el-dropdown trigger="click">
-          <el-badge :value="0">
-            <el-button class="button-user" icon="el-icon-user" circle></el-button>
-          </el-badge>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item icon="el-icon-setting">设置</el-dropdown-item>
-            <el-dropdown-item icon="el-icon-delete">退出</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-      </el-header>
-      <el-main>
-        <el-card class="box-card">
-          <el-row type="flex" :gutter="10" style="margin-left: -25px;">
-            <el-col :span="13">
-              <el-carousel trigger="click" height="400px">
-                <el-carousel-item v-for="item in parsedsightDetail.imageUrl" :key="item">
-                  <img :src="item" alt="" width="120%"/>
-                </el-carousel-item>
-              </el-carousel>
-            </el-col>
-            <el-col :span="10">
-              <el-row>
-                <span style="font-size: 25px;font-weight: 400;color: #409eff;">{{ parsedsightDetail.name }}</span>
-                <div style="float: right;">
-                  <!-- @mouseout 鼠标移开后：若用户打分，那肯定执行了 click，则显示用户评分；若未打分，则为 0 颗星 -->
-                  <!-- <ul class="rate-stars">
-                    <li><span style="font-size:small;position: relative;margin-right: 10px;">打分：</span></li>
-                    <li v-for="(i, index) in starList" :key="index" @click="clickStars(index)" @mouseover="starNums=index+1" @mouseout="mouseOutStars(index)">
-                      <img class="stars" :src="starNums>index?starLight:starGray" width="50%"/>
-                    </li>
-                  </ul> -->
-                  <el-rate v-model="userRate" @change="changeRate"></el-rate>
-                </div>
-                <span style="font-size: small;"> {{ parsedsightDetail.level }}</span>
-                <p style="font-size: 15px;color: #909399;">{{ parsedsightDetail.description }}</p><br />
-                <p>
-                  <i class="el-icon-location-outline"></i><span style="color: #909399;"> 位置：</span>
-                  <span>{{ parsedsightDetail.location }}</span>
-                </p>
-                <p>
-                  <i class="el-icon-s-data"></i><span style="color: #909399;"> 评分：</span>
-                  <span style="font-size: 19px;color: #ff6600;">{{ parsedsightDetail.point }}</span><span> / 5 分</span>
-                </p>
-                <p>
-                  <i class="el-icon-sunny"></i><span style="color: #909399;"> 热度：</span>
-                  <span>{{ parsedsightDetail.heat }}</span>
-                </p>
-                <p>
-                  <i class="el-icon-collection-tag"></i><span style="color: #909399;"> 标签：</span>
-                  <!-- 防止 split 出现 undefined -->
-                  <span v-for="item in (parsedsightDetail.subject || '').split(',')" :key="item">
-                    <el-tag size="small" style="margin-right: 10px;">{{ item }}</el-tag>
-                  </span>
-                </p><br />
-                <el-button style="position: relative;margin-right: 225px;" type="primary" icon="el-icon-shopping-cart-2">收藏景点</el-button>
-                <div class="button-shared">
-                  <div>
-                    <i class="el-icon-share"></i><span style="color: #909399;margin-right: 70px;" > 分享：</span>
-                  </div>
-                  <i class="iconfont" style="color: #7ad238;font-size: 35px;">&#xe6df;</i>
-                  <i class="iconfont" style="color: #1bc1fa;font-size: 35px;">&#xe6e0;</i>
-                  <i class="iconfont" style="color: #e6152c;font-size: 35px;">&#xe6de;</i>
-                  <i class="iconfont" style="color: #00b51d;font-size: 35px;">&#xe6dc;</i>
-                </div>
-              </el-row>
-            </el-col>
-          </el-row>
-        </el-card>
-        <el-divider></el-divider>
-        <el-card>
-          <el-tabs v-model="activeName">
-            <el-tab-pane label="景点介绍" name="first">
-              <span style="font-size: medium;" slot="label"><i class="el-icon-document"></i> 景点介绍</span>
-              <p style="line-height: 30px;padding: 20px;">{{ parsedsightDetail.introduction }}</p>
-            </el-tab-pane>
-            <el-tab-pane label="用户评论" name="second">
-              <span style="font-size: medium;" slot="label"><i class="el-icon-s-comment"></i> 用户评论</span>
-              <div v-for="(item, index) in commentList" :key="index">
-                <el-card class="card-comment" shadow="never">
-                  <p>
-                    <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
-                    <span style="position: relative;margin-left: 10px;bottom: 13px;">匿名游客</span>
-                    <span style="font-size: 12px;float: right;color: #909399;">{{ item.createdDate }}</span>
-                  </p>
-                  <p style="font-size: 14px;">{{ item.content }}</p>
-                </el-card>
+  <div class="sight-detail">
+    <el-card class="box-card">
+      <el-row type="flex" :gutter="10" style="margin-left: -25px;">
+        <el-col :span="13">
+          <el-carousel trigger="click" height="400px">
+            <el-carousel-item v-for="item in parsedsightDetail.imageUrl" :key="item">
+              <img :src="item" alt="" width="120%"/>
+            </el-carousel-item>
+          </el-carousel>
+        </el-col>
+        <el-col :span="10">
+          <el-row>
+            <span style="font-size: 25px;font-weight: 400;color: #409eff;">{{ parsedsightDetail.name }}</span>
+            <div style="float: right;">
+              <!-- @mouseout 鼠标移开后：若用户打分，那肯定执行了 click，则显示用户评分；若未打分，则为 0 颗星 -->
+              <!-- <ul class="rate-stars">
+                <li><span style="font-size:small;position: relative;margin-right: 10px;">打分：</span></li>
+                <li v-for="(i, index) in starList" :key="index" @click="clickStars(index)" @mouseover="starNums=index+1" @mouseout="mouseOutStars(index)">
+                  <img class="stars" :src="starNums>index?starLight:starGray" width="50%"/>
+                </li>
+              </ul> -->
+              <el-rate v-model="userRate" @change="changeRate"></el-rate>
+            </div>
+            <span style="font-size: small;"> {{ parsedsightDetail.level }}</span>
+            <p style="font-size: 15px;color: #909399;">{{ parsedsightDetail.description }}</p><br />
+            <p>
+              <i class="el-icon-location-outline"></i><span style="color: #909399;"> 位置：</span>
+              <span>{{ parsedsightDetail.location }}</span>
+            </p>
+            <p>
+              <i class="el-icon-s-data"></i><span style="color: #909399;"> 评分：</span>
+              <span style="font-size: 19px;color: #ff6600;">{{ parsedsightDetail.point }}</span><span> / 5 分</span>
+            </p>
+            <p>
+              <i class="el-icon-sunny"></i><span style="color: #909399;"> 热度：</span>
+              <span>{{ parsedsightDetail.heat }}</span>
+            </p>
+            <p>
+              <i class="el-icon-collection-tag"></i><span style="color: #909399;"> 标签：</span>
+              <!-- 防止 split 出现 undefined -->
+              <span v-for="item in (parsedsightDetail.subject || '').split(',')" :key="item">
+                <el-tag size="small" style="margin-right: 10px;">{{ item }}</el-tag>
+              </span>
+            </p><br />
+            <el-button style="position: relative;margin-right: 225px;" type="primary" icon="el-icon-shopping-cart-2">收藏景点</el-button>
+            <div class="button-shared">
+              <div>
+                <i class="el-icon-share"></i><span style="color: #909399;margin-right: 70px;" > 分享：</span>
               </div>
-              <el-card class="card-comment" shadow="never">
-                <div style="display:flex">
-                  <el-avatar style="margin-right: 10px;" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
-                  <el-input
-                  type="textarea"
-                  placeholder="你的想法 ~"
-                  :autosize="{ minRows: 5}"
-                  v-model="userComment"
-                  maxlength="1200"
-                  show-word-limit
-                  >
-                  </el-input>
-                </div>
-                <div align="right">
-                  <el-button type="primary" icon="el-icon-check" style="position: relative;margin-top: 10px;">写好了</el-button>
-                </div>
-              </el-card>
-              <!-- 分页区域 -->
-              <el-pagination :hide-on-single-page="true" @size-change="handleSizeChange" @current-change="handleCurrentChange"
-              :current-page="commentQueryInfo.pageNum" :page-sizes="[5, 10, 20]" :page-size="commentQueryInfo.pageSize"
-              layout="total, sizes, prev, pager, next, jumper" :total="commentNum">
-              </el-pagination>
-            </el-tab-pane>
-          </el-tabs>
-        </el-card>
-        <el-divider></el-divider>
-        <h2>相似景点</h2>
-        <el-row>
-          <el-col :span="4" v-for="(sight, index1) in parsedSimilarList" :key="index1">
-            <span v-for="(imageUrl, index2) in sight.imageUrl" :key="index2">
-              <!-- 只显示每个景点的第一张图片 -->
-              <el-card shadow="hover" v-if="index2 < 1" :body-style="{ padding: '0px' }">
-                <img :src="imageUrl" class="card-image">
-                <div class="card-description">
-                  <span>{{sight.name}}</span>
-                  <div class="card-bottom clearfix">
-                    <time class="card-time">{{sight.description}}</time>
-                    <el-button type="text" class="card-button">更多</el-button>
-                  </div>
-                </div>
-              </el-card>
-            </span>
-          </el-col>
-          <el-button class="button-next" icon="el-icon-arrow-right" circle></el-button>
-        </el-row>
-      </el-main>
-      <el-footer>
-        <p style="font-size: small;">
-          京 ICP 备 1234567890-1 号
-        </p>
-        <p style="font-size: small;">
-          &copy; 2020 SightLens 版权所有
-        </p>
-      </el-footer>
-    </el-container>
-  </el-scrollbar>
+              <i class="iconfont" style="color: #7ad238;font-size: 35px;">&#xe6df;</i>
+              <i class="iconfont" style="color: #1bc1fa;font-size: 35px;">&#xe6e0;</i>
+              <i class="iconfont" style="color: #e6152c;font-size: 35px;">&#xe6de;</i>
+              <i class="iconfont" style="color: #00b51d;font-size: 35px;">&#xe6dc;</i>
+            </div>
+          </el-row>
+        </el-col>
+      </el-row>
+    </el-card>
+    <el-divider></el-divider>
+    <el-card>
+      <el-tabs v-model="activeName">
+        <el-tab-pane label="景点介绍" name="first">
+          <span style="font-size: medium;" slot="label"><i class="el-icon-document"></i> 景点介绍</span>
+          <p style="line-height: 30px;padding: 20px;">{{ parsedsightDetail.introduction }}</p>
+        </el-tab-pane>
+        <el-tab-pane label="用户评论" name="second">
+          <span style="font-size: medium;" slot="label"><i class="el-icon-s-comment"></i> 用户评论</span>
+          <div v-for="(item, index) in commentList" :key="index">
+            <el-card class="card-comment" shadow="never">
+              <p>
+                <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
+                <span style="position: relative;margin-left: 10px;bottom: 13px;">匿名游客</span>
+                <span style="font-size: 12px;float: right;color: #909399;">{{ item.createdDate }}</span>
+              </p>
+              <p style="font-size: 14px;">{{ item.content }}</p>
+            </el-card>
+          </div>
+          <el-card class="card-comment" shadow="never">
+            <div style="display:flex">
+              <el-avatar style="margin-right: 10px;" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
+              <el-input
+              type="textarea"
+              placeholder="你的想法 ~"
+              :autosize="{ minRows: 5}"
+              v-model="userComment"
+              maxlength="1200"
+              show-word-limit
+              >
+              </el-input>
+            </div>
+            <div align="right">
+              <el-button type="primary" icon="el-icon-check" style="position: relative;margin-top: 10px;">写好了</el-button>
+            </div>
+          </el-card>
+          <!-- 分页区域 -->
+          <el-pagination :hide-on-single-page="true" @size-change="handleSizeChange" @current-change="handleCurrentChange"
+          :current-page="commentQueryInfo.pageNum" :page-sizes="[5, 10, 20]" :page-size="commentQueryInfo.pageSize"
+          layout="total, sizes, prev, pager, next, jumper" :total="commentNum">
+          </el-pagination>
+        </el-tab-pane>
+      </el-tabs>
+    </el-card>
+    <el-divider></el-divider>
+    <h2>相似景点</h2>
+    <el-row>
+      <el-col :span="4" v-for="(sight, index1) in parsedSimilarList" :key="index1">
+        <span v-for="(imageUrl, index2) in sight.imageUrl" :key="index2">
+          <!-- 只显示每个景点的第一张图片 -->
+          <el-card shadow="hover" v-if="index2 < 1" :body-style="{ padding: '0px' }">
+            <img :src="imageUrl" class="card-image">
+            <div class="card-description">
+              <span>{{sight.name}}</span>
+              <div class="card-bottom clearfix">
+                <time class="card-time">{{sight.description}}</time>
+                <el-button type="text" class="card-button" @click="jumpSightDetail(sight.id)">更多</el-button>
+              </div>
+            </div>
+          </el-card>
+        </span>
+      </el-col>
+      <el-button class="button-next" icon="el-icon-arrow-right" circle></el-button>
+    </el-row>
+  </div>
 </template>
 
 <script>
 export default {
   data () {
     return {
-      id: 2709,
+      id: this.$route.params.sightId,
       sightDetail: {},
       parsedsightDetail: {},
       activeName: 'first',
@@ -178,7 +141,7 @@ export default {
         pageSize: 5
       },
       commentQueryInfo: {
-        sightId: 2709,
+        sightId: this.$route.params.sightId,
         pageNum: 1,
         pageSize: 5
       },
@@ -200,6 +163,13 @@ export default {
     this.getSightDetail(this.id)
     this.getSightCommentList()
     this.getSimilarSightList()
+  },
+  beforeRouteUpdate (to, from, next) {
+    this.id = to.params.sightId
+    this.getSightDetail(this.id)
+    this.getSightCommentList()
+    this.getSimilarSightList()
+    next()
   },
   methods: {
     async getSightDetail (id) {
@@ -260,6 +230,11 @@ export default {
       this.getSightCommentList()
     },
     changeRate () {
+    },
+    jumpSightDetail (id) {
+      this.$router.push({
+        path: `/sight/${id}`
+      })
     }
     // clickStars (i) {
     //   this.starNums = i + 1

@@ -42,7 +42,7 @@
           </el-menu>
         </el-aside>
         <!-- 右侧内容主体 -->
-        <div class="main">
+        <div class="user">
           <!-- 路由占位符 -->
           <router-view></router-view>
         </div>
@@ -125,16 +125,12 @@ export default {
     }
   }
 
-  .main {
+  .user {
     position: relative;
     top: 75px;
     left: 15.5vw;
     width: 82vw;
     background-color: #fff;
-  }
-
-  .iconfont {
-    margin-right: 10px;
   }
 
   .home-scroll {

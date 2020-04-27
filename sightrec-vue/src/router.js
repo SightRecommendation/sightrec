@@ -3,9 +3,11 @@ import Router from 'vue-router'
 import Home from './components/Home.vue'
 import UserHome from './components/UserHome.vue'
 import Settings from './components/user/Settings.vue'
+import Main from './components/Main.vue'
 import Login from './components/Login.vue'
 import Register from './components/Register.vue'
 import SightDetail from './components/SightDetail.vue'
+
 Vue.use(Router)
 
 const router = new Router({
@@ -13,9 +15,26 @@ const router = new Router({
     {
       path: '/',
       component: Home,
+      redirect: '/main',
       meta: {
         title: '主页 - SightLens'
-      }
+      },
+      children: [
+        {
+          path: '/main',
+          component: Main,
+          meta: {
+            title: '主页 - SightLens'
+          }
+        },
+        {
+          path: '/sight/:sightId',
+          component: SightDetail,
+          meta: {
+            title: '景点详情 - SightLens'
+          }
+        }
+      ]
     },
     {
       path: '/user',
@@ -72,6 +91,16 @@ router.beforeEach((to, from, next) => {
   // next 是一个函数，表示放行
   // next() 放行 next('/login') 强制跳转
   /* 路由发生变化修改页面title */
+
+  document.title = '登录 - SightLens'
+  if (to.path === '/login') {
+    return next()
+  }
+  // 获取token
+  const tokenStr = window.sessionStorage.getItem('token')
+  if (!tokenStr) {
+    return next('/login')
+  }
   document.title = to.meta.title
   next()
 })
