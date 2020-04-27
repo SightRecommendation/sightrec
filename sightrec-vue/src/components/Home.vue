@@ -3,7 +3,7 @@
     <el-container class="home-container">
       <!-- 头部区域 -->
       <el-header>
-        <div>
+        <div style="display: flex;">
           <el-link class="link-logo" :underline="false" href="../">
             <img src="https://cdn.jsdelivr.net/gh/JingqingLin/ImageHosting/img/592aef2edd2d3.png" width="48px" />
           </el-link>
@@ -11,9 +11,18 @@
         </div>
         <el-row :gutter="20">
           <el-col :span="8">
-            <el-input placeholder="请输入景点名称">
-              <el-button slot="append" icon="el-icon-search"></el-button>
-            </el-input>
+            <el-autocomplete popper-class="my-autocomplete"
+            v-model="sight" :fetch-suggestions="querySearchAsync"
+            placeholder="输入景点名称以搜索" @select="handleSelect" clearable style="width: 70%;">
+            <i
+            class="el-icon-search el-input__icon"
+            slot="suffix">
+            </i>
+            <template slot-scope="{ item }">
+              <div class="name">{{ item.value }}</div>
+              <span class="addr">{{ item.address }}</span>
+            </template>
+            </el-autocomplete>
           </el-col>
         </el-row>
         <el-dropdown @command="handleCommand" trigger="click">
@@ -44,6 +53,14 @@
 export default {
   data () {
     return {
+      searchedSights: [],
+      sight: '',
+      timeout: null,
+      // 获取搜索景点列表的参数
+      searchQueryInfo: {
+        query: '',
+        pageSize: 20
+      }
     }
   },
   created () {
@@ -61,6 +78,29 @@ export default {
       } else if (command === 'settings') {
         this.$router.push('/user/settings')
       }
+    },
+    querySearchAsync (queryString, cb) {
+      this.searchQueryInfo.query = queryString
+
+      if (queryString === '') {
+        var results = []
+        cb(results)
+      } else {
+        this.$http.get('sights/search', {
+          params: this.searchQueryInfo
+        }).then((response) => {
+          this.searchedSights = response.data.data
+          cb(this.searchedSights)
+        }).catch((error) => {
+          console.log(error)
+        })
+      }
+    },
+    handleSelect (item) {
+      this.sight = ''
+      this.$router.push({
+        path: `/sight/${item.id}`
+      })
     }
   }
 }
@@ -89,11 +129,6 @@ export default {
     position: fixed;
     top: 0;
     width: 100%;
-
-    .el-input {
-      margin-left: 30px;
-      margin-right: 700px;
-    }
   }
 
   .link-logo {
@@ -103,7 +138,8 @@ export default {
 
   .span-logo {
     font-family: 'Miriam Libre';
-    margin-left: 10px;
+    position: relative;
+    top: 11px;
   }
 
   .main {
@@ -126,6 +162,30 @@ export default {
     background-color: #fff;
     color: #333;
     text-align: center;
+  }
+
+  .my-autocomplete {
+    li {
+      line-height: normal !important;
+      padding: 7px !important;
+      padding-left: 17px !important;
+
+      .name {
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+      .addr {
+        font-size: 12px;
+        color: #b4b4b4;
+      }
+      .highlighted .addr {
+        color: #ddd;
+      }
+    }
+  }
+
+  .el-autocomplete-suggestion__wrap {
+    margin-bottom: 0px !important;
   }
 
   .home-scroll {

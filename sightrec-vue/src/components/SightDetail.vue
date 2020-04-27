@@ -136,7 +136,7 @@ export default {
       similarQueryInfo: {
         query: '',
         // 当前的页数
-        pageNum: 20,
+        pageNum: 1,
         // 当前每页显示多少条数据
         pageSize: 5
       },
@@ -162,13 +162,11 @@ export default {
   created () {
     this.getSightDetail(this.id)
     this.getSightCommentList()
-    this.getSimilarSightList()
   },
   beforeRouteUpdate (to, from, next) {
     this.id = to.params.sightId
     this.getSightDetail(this.id)
     this.getSightCommentList()
-    this.getSimilarSightList()
     next()
   },
   methods: {
@@ -182,6 +180,7 @@ export default {
       this.sightDetail = res.data
       this.parsedsightDetail = this.sightDetail
       this.parsedsightDetail.imageUrl = JSON.parse(this.parsedsightDetail.imageUrl)
+      this.getSimilarSightList()
     },
     async getSightCommentList () {
       const { data: res } = await this.$http.get('comments/sight', {
@@ -194,10 +193,12 @@ export default {
       this.commentNum = res.data.commentNum
     },
     async getSimilarSightList () {
-      const { data: res } = await this.$http.get('sights', {
+      this.similarQueryInfo.query = await (this.sightDetail.subject || '').split(',')[0]
+      const { data: res } = await this.$http.get('sights/similar', {
         params: this.similarQueryInfo
       })
       if (res.meta.status !== 200) {
+        console.log(res)
         return this.$message.error('获取相似景点失败！')
       }
       this.similarList = res.data.sights
@@ -211,7 +212,7 @@ export default {
         params: this.similarQueryInfo
       })
       if (res.meta.status !== 200) {
-        return this.$message.error('获取相似景点失败！')
+        return this.$message.error('评论用户列表失败！')
       }
       this.similarList = res.data.sights
       this.parsedSimilarList = this.similarList

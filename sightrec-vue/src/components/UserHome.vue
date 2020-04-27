@@ -7,7 +7,7 @@
           <el-link class="link-logo" :underline="false" href="../">
             <img src="https://cdn.jsdelivr.net/gh/JingqingLin/ImageHosting/img/592aef2edd2d3.png" width="48px" />
           </el-link>
-          <span class="span-logo">个人中心 - SightLens</span>
+          <span class="span-user-logo">个人中心 - SightLens</span>
         </div>
         <el-button type="danger" size="small" @click="logout" plain>退出</el-button>
       </el-header>
@@ -103,7 +103,7 @@ export default {
     align-items: center;
   }
 
-  .span-logo {
+  .span-user-logo {
     font-family: 'Miriam Libre';
     margin-left: 10px;
   }
