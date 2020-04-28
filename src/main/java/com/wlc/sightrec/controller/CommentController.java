@@ -49,7 +49,7 @@ public class CommentController {
     }
 
     @RequestMapping(path = {"/comments/sight"}, method = {RequestMethod.GET})
-    public JSONObject getComments(@RequestParam("sightId") int sightId,
+    public JSONObject getCommentsBySightId(@RequestParam("sightId") int sightId,
                                   @RequestParam("pageNum") int pageNum,
                                   @RequestParam("pageSize") int pageSize,
                                   HttpServletRequest request, HttpServletResponse response) {

@@ -4,8 +4,6 @@ import com.wlc.sightrec.entity.BaseResponse;
 import com.wlc.sightrec.entity.User;
 import com.wlc.sightrec.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -52,13 +50,13 @@ public class UserController {
 
     @RequestMapping(value = {"/", ""}, method = RequestMethod.GET, produces = "application/json;charset=utf-8", params = {"keyString", "pageNum", "pageSize"})
     public BaseResponse queryUser(@RequestParam(value = "keyString") String keyString,
-                                                         @RequestParam(value = "pageNum") Integer pageNum,
-                                                         @RequestParam(value = "pageSize") Integer pageSize) {
+                                  @RequestParam(value = "pageNum") Integer pageNum,
+                                  @RequestParam(value = "pageSize") Integer pageSize) {
         try {
             Map<String, Object> data = userService.queryUser(keyString, pageNum, pageSize);
-            return BaseResponse.ok("查询成功",data);
+            return BaseResponse.ok("查询成功", data);
         } catch (Exception e) {
-            return BaseResponse.fail(e.getMessage(),null);
+            return BaseResponse.fail(e.getMessage(), null);
         }
     }
 
@@ -67,9 +65,9 @@ public class UserController {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             userService.updateUser(user);
-            return BaseResponse.ok("修改成功",null);
+            return BaseResponse.ok("修改成功", null);
         } catch (Exception e) {
-            return BaseResponse.fail(e.getMessage(),null);
+            return BaseResponse.fail(e.getMessage(), null);
         }
     }
 

@@ -69,8 +69,8 @@
           <div v-for="(item, index) in commentList" :key="index">
             <el-card class="card-comment" shadow="never">
               <p>
-                <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
-                <span style="position: relative;margin-left: 10px;bottom: 13px;">匿名游客</span>
+                <el-avatar :src="userList[index].headUrl"></el-avatar>
+                <span style="position: relative;margin-left: 10px;bottom: 13px;">{{ userList[index].name }}</span>
                 <span style="font-size: 12px;float: right;color: #909399;">{{ item.createdDate }}</span>
               </p>
               <p style="font-size: 14px;">{{ item.content }}</p>
@@ -83,7 +83,7 @@
               type="textarea"
               placeholder="你的想法 ~"
               :autosize="{ minRows: 5}"
-              v-model="userComment"
+              v-model="myComment"
               maxlength="1200"
               show-word-limit
               >
@@ -94,7 +94,7 @@
             </div>
           </el-card>
           <!-- 分页区域 -->
-          <el-pagination :hide-on-single-page="true" @size-change="handleSizeChange" @current-change="handleCurrentChange"
+          <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
           :current-page="commentQueryInfo.pageNum" :page-sizes="[5, 10, 20]" :page-size="commentQueryInfo.pageSize"
           layout="total, sizes, prev, pager, next, jumper" :total="commentNum">
           </el-pagination>
@@ -145,10 +145,34 @@ export default {
         pageNum: 1,
         pageSize: 5
       },
+      userQueryInfo: {
+        id: ''
+      },
       commentNum: 0,
       commentList: [],
-      userList: [],
-      userComment: '',
+      userList: [
+        { name: '匿名游客', headUrl: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png' },
+        { name: '匿名游客', headUrl: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png' },
+        { name: '匿名游客', headUrl: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png' },
+        { name: '匿名游客', headUrl: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png' },
+        { name: '匿名游客', headUrl: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png' },
+        { name: '匿名游客', headUrl: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png' },
+        { name: '匿名游客', headUrl: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png' },
+        { name: '匿名游客', headUrl: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png' },
+        { name: '匿名游客', headUrl: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png' },
+        { name: '匿名游客', headUrl: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png' },
+        { name: '匿名游客', headUrl: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png' },
+        { name: '匿名游客', headUrl: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png' },
+        { name: '匿名游客', headUrl: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png' },
+        { name: '匿名游客', headUrl: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png' },
+        { name: '匿名游客', headUrl: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png' },
+        { name: '匿名游客', headUrl: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png' },
+        { name: '匿名游客', headUrl: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png' },
+        { name: '匿名游客', headUrl: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png' },
+        { name: '匿名游客', headUrl: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png' },
+        { name: '匿名游客', headUrl: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png' }
+      ],
+      myComment: '',
       similarList: [],
       parsedSimilarList: [],
       // starList: [0, 1, 2, 3, 4],
@@ -191,6 +215,20 @@ export default {
       }
       this.commentList = res.data.comments
       this.commentNum = res.data.commentNum
+      this.getCommentUserList()
+    },
+    async getCommentUserList () {
+      for (let i = 0; i < this.commentList.length; i++) {
+        this.userQueryInfo.id = this.commentList[i].userId
+        const { data: res } = await this.$http.get('users/', {
+          params: this.userQueryInfo
+        })
+        if (res.meta.status !== 200) {
+          return this.$message.error('获取评论失败！')
+        }
+        var tempUser = res.data
+        this.userList[i] = tempUser
+      }
     },
     async getSimilarSightList () {
       this.similarQueryInfo.query = await (this.sightDetail.subject || '').split(',')[0]
@@ -200,19 +238,6 @@ export default {
       if (res.meta.status !== 200) {
         console.log(res)
         return this.$message.error('获取相似景点失败！')
-      }
-      this.similarList = res.data.sights
-      this.parsedSimilarList = this.similarList
-      for (let i = 0; i < this.similarList.length; i++) {
-        this.parsedSimilarList[i].imageUrl = JSON.parse(this.parsedSimilarList[i].imageUrl)
-      }
-    },
-    async getCommentUserList () {
-      const { data: res } = await this.$http.get('users', {
-        params: this.similarQueryInfo
-      })
-      if (res.meta.status !== 200) {
-        return this.$message.error('评论用户列表失败！')
       }
       this.similarList = res.data.sights
       this.parsedSimilarList = this.similarList
