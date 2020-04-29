@@ -146,7 +146,6 @@ export default {
       }
       this.popularList = res.data.sights
       this.parsedPopularList = this.popularList
-      console.log('highrated' + res)
       for (let i = 0; i < this.popularList.length; i++) {
         this.parsedPopularList[i].imageUrl = JSON.parse(this.parsedPopularList[i].imageUrl)
       }
@@ -160,7 +159,6 @@ export default {
       }
       this.highratedList = res.data.sights
       this.parsedHighratedList = this.highratedList
-      console.log('popular' + res)
       for (let i = 0; i < this.highratedList.length; i++) {
         this.parsedHighratedList[i].imageUrl = JSON.parse(this.parsedHighratedList[i].imageUrl)
       }
@@ -174,7 +172,6 @@ export default {
       }
       this.recommendedList = res.data.sights
       this.parsedrecommendedList = this.recommendedList
-      console.log('highrated' + res)
       for (let i = 0; i < this.recommendedList.length; i++) {
         this.parsedrecommendedList[i].imageUrl = JSON.parse(this.parsedrecommendedList[i].imageUrl)
       }

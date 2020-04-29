@@ -11,6 +11,8 @@ public interface UserService {
 
     User queryUserById(Integer id);
 
+    User queryUserByName(String name);
+
     Map<String, Object> queryUser(String keyString, Integer pageNum, Integer pageSize);
 
     Boolean updateUser(User user);

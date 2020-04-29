@@ -66,7 +66,20 @@ public class UserServiceImpl implements UserService {
         } catch (Exception e) {
             throw new RuntimeException("获取用户信息失败");
         }
+    }
 
+    @Override
+    public User queryUserByName(String name) {
+        try {
+            User user = userDao.queryUserByName(name);
+            if (user != null) {
+                return user;
+            } else {
+                throw new RuntimeException("用户不存在！");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("获取用户信息失败");
+        }
     }
 
     @Override
@@ -89,18 +102,27 @@ public class UserServiceImpl implements UserService {
     @Override
     public Boolean updateUser(User user) {
         try {
-            user.setSalt(UUID.randomUUID().toString().substring(0, 5));
-            user.setPassword(MD5Util.MD5(user.getPassword() + user.getSalt()));
-            int success = userDao.updateUser(user);
-            if (success > 0) {
-                return true;
+            User foundUser = userDao.queryUserByName(user.getName());
+            if (foundUser == null || foundUser.getId().equals(user.getId())) {
+                user.setName(user.getName());
+                user.setSalt(UUID.randomUUID().toString().substring(0, 5));
+                user.setPassword(MD5Util.MD5(user.getPassword() + user.getSalt()));
+                user.setHeadUrl(user.getHeadUrl());
+                user.setPhone(user.getPhone());
+                user.setEmail(user.getEmail());
+                int success = userDao.updateUser(user);
+                if (success > 0) {
+                    return true;
+                } else {
+                    logger.info("成功码：" + success);
+                    throw new RuntimeException("更新用户失败了！");
+                }
             } else {
-                logger.info(String.valueOf(success));
-                throw new RuntimeException("更新用户失败！");
+                throw new RuntimeException("用户名已存在");
             }
         } catch (Exception e) {
-            logger.info(e.getMessage());
-            throw new RuntimeException("更新用户失败！");
+            e.printStackTrace();
+            throw new RuntimeException("修改失败：" + e.getMessage());
         }
     }
 
@@ -108,7 +130,6 @@ public class UserServiceImpl implements UserService {
     public Map<String, Object> login(User user) {
         try {
             User foundUser = userDao.queryUserByName(user.getName());
-            //logger.info(foundUser.getName());
             if (foundUser == null) {
                 logger.info("用户不存在");
                 throw new RuntimeException("用户" + user.getName() + "不存在");
@@ -118,7 +139,6 @@ public class UserServiceImpl implements UserService {
                 logger.info("密码错误");
                 throw new RuntimeException("密码错误");
             } else {
-                logger.info(foundUser.getName());
                 Map<String, Object> data = new HashMap<>();
                 data.put("id", foundUser.getId());
                 data.put("name", foundUser.getName());
@@ -144,7 +164,6 @@ public class UserServiceImpl implements UserService {
                 data.put("name", newUser.getName());
                 data.put("token", newUser.getPassword());
                 return data;
-                //return login(user);
             } else {
                 throw new RuntimeException("用户名已存在");
             }

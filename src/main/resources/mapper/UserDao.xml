@@ -19,7 +19,9 @@
             <if test="name!=null">`name`=#{name},</if>
             <if test="salt!=null">`salt`=#{salt},</if>
             <if test="password!=null">`password`=#{password},</if>
-            <if test="headUrl!=null">`head_url`=#{headUrl}</if>
+            <if test="headUrl!=null">`head_url`=#{headUrl},</if>
+            <if test="email!=null">`email`=#{email},</if>
+            <if test="phone!=null">`phone`=#{phone}</if>
         </set>
         WHERE `id`=#{id}
     </update>
@@ -35,7 +37,7 @@
         where `name`=#{name}
     </select>
     <select id="queryUserById" resultType="com.wlc.sightrec.entity.User">
-        select `name`,`head_url` from `sightrec`.`user`
+        select `name`,`head_url`,`email`,`phone` from `sightrec`.`user`
         where `id`=#{id}
     </select>
 </mapper>

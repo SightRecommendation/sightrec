@@ -10,12 +10,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/users")
 public class UserController {
     @Autowired
     UserService userService;
 
-    @RequestMapping(value = {"/", ""}, method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+    @RequestMapping(value = {"/users", ""}, method = RequestMethod.POST, produces = "application/json;charset=utf-8")
     public BaseResponse insertUser(@RequestBody User user) {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
@@ -26,7 +25,7 @@ public class UserController {
         }
     }
 
-    @RequestMapping(value = {"/", ""}, method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+    @RequestMapping(value = {"/users", ""}, method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
     public BaseResponse deleteUser(@RequestParam(value = "id") Integer id) {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
@@ -37,7 +36,7 @@ public class UserController {
         }
     }
 
-    @RequestMapping(value = {"/", ""}, method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+    @RequestMapping(value = {"/users", ""}, method = RequestMethod.GET, produces = "application/json;charset=utf-8")
     public BaseResponse queryUserById(@RequestParam(value = "id") Integer id) {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
@@ -48,7 +47,17 @@ public class UserController {
         }
     }
 
-    @RequestMapping(value = {"/", ""}, method = RequestMethod.GET, produces = "application/json;charset=utf-8", params = {"keyString", "pageNum", "pageSize"})
+    @RequestMapping(value = {"/users/name", ""}, method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+    public BaseResponse queryUserByName(@RequestParam(value = "name") String name) {
+        try {
+            User user = userService.queryUserByName(name);
+            return BaseResponse.ok("查询成功", user);
+        } catch (Exception e) {
+            return BaseResponse.fail(e.getMessage(), null);
+        }
+    }
+
+    @RequestMapping(value = {"/users", ""}, method = RequestMethod.GET, produces = "application/json;charset=utf-8", params = {"keyString", "pageNum", "pageSize"})
     public BaseResponse queryUser(@RequestParam(value = "keyString") String keyString,
                                   @RequestParam(value = "pageNum") Integer pageNum,
                                   @RequestParam(value = "pageSize") Integer pageSize) {
@@ -60,9 +69,8 @@ public class UserController {
         }
     }
 
-    @RequestMapping(value = {"/", ""}, method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+    @RequestMapping(value = {"/users", ""}, method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
     public BaseResponse updateUser(@RequestBody User user) {
-        Map<String, Object> map = new HashMap<String, Object>();
         try {
             userService.updateUser(user);
             return BaseResponse.ok("修改成功", null);
@@ -71,7 +79,7 @@ public class UserController {
         }
     }
 
-    @RequestMapping(value = {"/login"}, method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+    @RequestMapping(value = {"users/login"}, method = RequestMethod.POST, produces = "application/json;charset=utf-8")
     public BaseResponse login(@RequestBody User user) {
         try {
             Object data = userService.login(user);
@@ -81,7 +89,7 @@ public class UserController {
         }
     }
 
-    @RequestMapping(value = {"/register"}, method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+    @RequestMapping(value = {"users/register"}, method = RequestMethod.POST, produces = "application/json;charset=utf-8")
     public BaseResponse register(@RequestBody User user) {
         try {
             Object data = userService.register(user);

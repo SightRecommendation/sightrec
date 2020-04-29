@@ -41,7 +41,7 @@ export default {
       leftColor: 0,
       bottomColor: 203,
       loginForm: {
-        name: 'user',
+        name: 'admin',
         password: '123456'
       },
       loginFormRules: {
@@ -70,8 +70,10 @@ export default {
         const { data: result } = await this.$http.post('/users/login', this.loginForm)
         if (result.meta.status !== 200) this.$message.error('登录失败')
         else this.$message.success('登录成功')
-        console.log(result)
         window.sessionStorage.setItem('token', result.data.token)
+        window.sessionStorage.setItem('id', result.data.id)
+        window.sessionStorage.setItem('name', result.data.name)
+
         this.$router.push('/')
       })
     },

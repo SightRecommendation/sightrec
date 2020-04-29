@@ -40,7 +40,7 @@
                 <span>我的评论</span>
               </template>
             </el-menu-item>
-            <el-menu-item index="/user/favorite">
+            <el-menu-item index="/user/favorites">
               <template slot="title">
                 <i class="el-icon-shopping-cart-2"></i>
                 <span>我的收藏</span>

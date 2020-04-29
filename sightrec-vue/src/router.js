@@ -3,6 +3,8 @@ import Router from 'vue-router'
 import Home from './components/Home.vue'
 import UserHome from './components/UserHome.vue'
 import Settings from './components/user/Settings.vue'
+import Comments from './components/user/Comments.vue'
+import Favorites from './components/user/Favorites.vue'
 import Main from './components/Main.vue'
 import Login from './components/Login.vue'
 import Register from './components/Register.vue'
@@ -52,10 +54,17 @@ const router = new Router({
           }
         },
         {
-          path: '/comments',
-          component: Settings,
+          path: '/user/comments',
+          component: Comments,
           meta: {
             title: '我的评论 - SightLens'
+          }
+        },
+        {
+          path: '/user/favorites',
+          component: Favorites,
+          meta: {
+            title: '我的收藏- SightLens'
           }
         }
       ]

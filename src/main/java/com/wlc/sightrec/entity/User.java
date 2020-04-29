@@ -13,4 +13,6 @@ public class User {
     private String password;
     private String salt;
     private String headUrl;
+    private String email;
+    private String phone;
 }
