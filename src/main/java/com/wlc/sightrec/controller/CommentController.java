@@ -50,9 +50,9 @@ public class CommentController {
 
     @RequestMapping(path = {"/comments/sight"}, method = {RequestMethod.GET})
     public JSONObject getCommentsBySightId(@RequestParam("sightId") int sightId,
-                                  @RequestParam("pageNum") int pageNum,
-                                  @RequestParam("pageSize") int pageSize,
-                                  HttpServletRequest request, HttpServletResponse response) {
+                                           @RequestParam("pageNum") int pageNum,
+                                           @RequestParam("pageSize") int pageSize,
+                                           HttpServletRequest request, HttpServletResponse response) {
         // token 验证没写
         // query 为搜索参数
         String auth = request.getHeader("Authorization");

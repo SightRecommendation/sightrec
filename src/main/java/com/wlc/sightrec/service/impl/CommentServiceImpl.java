@@ -66,7 +66,8 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void modifyComment(int id, String content) {
         try {
-            int success = commentDao.updateComment(id, content);;
+            int success = commentDao.updateComment(id, content);
+            ;
             if (success <= 0) {
                 throw new RuntimeException("修改评论失败：数据库 return");
             }

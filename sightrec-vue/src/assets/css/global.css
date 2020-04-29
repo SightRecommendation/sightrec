@@ -2,92 +2,92 @@
 html,
 body,
 #app {
-  height: 100%;
-  width: 100%;
-  margin: 0;
-  padding: 0;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 .el-breadcrumb {
-  margin-bottom: 15px;
-  font-size: 12px;
+    margin-bottom: 15px;
+    font-size: 12px;
 }
 
 .el-table {
-  margin-top: 15px;
-  font-size: 12px;
+    margin-top: 15px;
+    font-size: 12px;
 }
 
 .el-card {
-  margin-bottom: 30px;
+    margin-bottom: 30px;
 }
 
 .el-dialog {
-  display: flex;
-  flex-direction: column;
-  margin: 0 !important;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  max-height: calc(100% - 30px);
-  max-width: calc(100% - 30px);
+    display: flex;
+    flex-direction: column;
+    margin: 0 !important;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-height: calc(100% - 30px);
+    max-width: calc(100% - 30px);
 }
 
 .el-dialog .el-dialog__body {
-  flex: 1;
-  overflow: auto;
+    flex: 1;
+    overflow: auto;
 }
 
 .el-pagination {
-  margin-top: 15px;
+    margin-top: 15px;
 }
 
 .el-scrollbar__wrap {
-  overflow-x: hidden;
+    overflow-x: hidden;
 }
 
 /* https://segmentfault.com/q/1010000015765492/a-1020000016365925 */
 .el-select-dropdown .el-scrollbar .el-scrollbar__wrap {
-  overflow: scroll;
+    overflow: scroll;
 }
 
 * {
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI,
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI,
     Roboto, Oxygen, Ubuntu, Cantarell, Droid Sans, Helvetica Neue, Arial,
     sans-serif;
 }
 
 @font-face {
-  font-family: 'PingFang';
-  src: url(../fonts/PingFang/PingFangSC_0.ttf);
+    font-family: 'PingFang';
+    src: url(../fonts/PingFang/PingFangSC_0.ttf);
 }
 
 @font-face {
-  font-family: 'MiLanProVF';
-  src: url(../fonts/MiLanProVF.ttf);
+    font-family: 'MiLanProVF';
+    src: url(../fonts/MiLanProVF.ttf);
 }
 
 @font-face {
-  font-family: 'Inter';
-  src: url(../fonts/Inter/Inter-Regular.woff);
+    font-family: 'Inter';
+    src: url(../fonts/Inter/Inter-Regular.woff);
 }
 
 @font-face {
-  font-family: 'Miriam Libre';
-  src: url(../fonts/Miriam_Libre/MiriamLibre-Regular.ttf);
+    font-family: 'Miriam Libre';
+    src: url(../fonts/Miriam_Libre/MiriamLibre-Regular.ttf);
 }
 
 @font-face {
-  font-family: 'iconfont';  /* project id 1780999 */
-  src: url('//at.alicdn.com/t/font_1780999_6vy4cbdy157.eot');
-  src: url('//at.alicdn.com/t/font_1780999_6vy4cbdy157.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_1780999_6vy4cbdy157.woff2') format('woff2'),
-  url('//at.alicdn.com/t/font_1780999_6vy4cbdy157.woff') format('woff'),
-  url('//at.alicdn.com/t/font_1780999_6vy4cbdy157.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_1780999_6vy4cbdy157.svg#iconfont') format('svg');
+    font-family: 'iconfont';  /* project id 1780999 */
+    src: url('//at.alicdn.com/t/font_1780999_6vy4cbdy157.eot');
+    src: url('//at.alicdn.com/t/font_1780999_6vy4cbdy157.eot?#iefix') format('embedded-opentype'),
+    url('//at.alicdn.com/t/font_1780999_6vy4cbdy157.woff2') format('woff2'),
+    url('//at.alicdn.com/t/font_1780999_6vy4cbdy157.woff') format('woff'),
+    url('//at.alicdn.com/t/font_1780999_6vy4cbdy157.ttf') format('truetype'),
+    url('//at.alicdn.com/t/font_1780999_6vy4cbdy157.svg#iconfont') format('svg');
 }
 
 textarea {
-  font-family: inherit;
+    font-family: inherit;
 }

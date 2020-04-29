@@ -22,7 +22,7 @@ public class CommentTests {
             content.append(" 条评论");
             comment.setContent(String.valueOf(content));
             Date date = new Date();
-            date.setTime(date.getTime() + 1000*3600*5*i);
+            date.setTime(date.getTime() + 1000 * 3600 * 5 * i);
             comment.setCreatedDate(date);
             comment.setSightId(1);
             comment.setUserId(i % 3);

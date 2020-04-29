@@ -16,10 +16,9 @@ import java.util.UUID;
 @Service
 public class AdminServiceImpl implements AdminService {
 
-    private Logger logger = LoggerFactory.getLogger(AdminServiceImpl.class);
-
     @Autowired
     AdminDao adminDao;
+    private Logger logger = LoggerFactory.getLogger(AdminServiceImpl.class);
 
     @Override
     public boolean insertAdmin(Admin admin) {
@@ -49,16 +48,16 @@ public class AdminServiceImpl implements AdminService {
             Admin foundAdmin = adminDao.queryAdminByName(admin.getName());
             if (foundAdmin == null) {
                 throw new RuntimeException("管理员" + admin.getName() + "不存在");
-            } else if (!foundAdmin.getPassword().equals(MD5Util.MD5(admin.getPassword() + foundAdmin.getSalt()))){
+            } else if (!foundAdmin.getPassword().equals(MD5Util.MD5(admin.getPassword() + foundAdmin.getSalt()))) {
                 throw new RuntimeException("密码错误");
-            }else{
+            } else {
                 Map<String, Object> data = new HashMap<>();
-                data.put("name",foundAdmin.getName());
-                data.put("token","ruok");
+                data.put("name", foundAdmin.getName());
+                data.put("token", "ruok");
                 return data;
             }
         } catch (Exception e) {
-            throw new RuntimeException("登录失败："+e.getMessage());
+            throw new RuntimeException("登录失败：" + e.getMessage());
         }
     }
 }

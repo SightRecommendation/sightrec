@@ -8,5 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AdminDao {
     int insertAdmin(Admin admin);
+
     Admin queryAdminByName(String name);
 }
