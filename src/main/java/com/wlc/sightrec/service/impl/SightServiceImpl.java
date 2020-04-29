@@ -25,6 +25,11 @@ public class SightServiceImpl implements SightService {
     }
 
     @Override
+    public List<Sight> getSightsByNameAndHeat(String query) {
+        return sightDao.selectByNameAndHeat(query);
+    }
+
+    @Override
     public List<Sight> getSightsByTag(String query) {
         return sightDao.selectByTag(query);
     }

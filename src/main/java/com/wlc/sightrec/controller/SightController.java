@@ -68,7 +68,7 @@ public class SightController {
             } else {
                 // 模糊搜索，返回所有符合条件的景点
                 query = "%" + query + "%";
-                sightList = sightService.getSightsByName(query);
+                sightList = sightService.getSightsByNameAndHeat(query);
             }
             int sightNum = sightList.size();
             int offset = 0;

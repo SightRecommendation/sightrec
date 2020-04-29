@@ -26,7 +26,11 @@ public interface SightDao {
     List<Sight> selectByName(@Param("query") String query);
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME,
-            " where status=0 and subject like #{query} order by id asc"})
+            " where status=0 and name like #{query} order by heat desc"})
+    List<Sight> selectByNameAndHeat(@Param("query") String query);
+
+    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME,
+            " where status=0 and subject like #{query}"})
     List<Sight> selectByTag(@Param("query") String query);
 
     @Update({"update ", TABLE_NAME,
