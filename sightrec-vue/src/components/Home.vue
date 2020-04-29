@@ -1,35 +1,48 @@
 <template>
-  <el-scrollbar class="home-scroll" ref="myScrollbar">
+  <el-scrollbar class="home-scroll"
+                ref="myScrollbar">
     <el-container class="home-container">
       <!-- 头部区域 -->
       <el-header>
         <div style="display: flex;">
-          <el-link class="link-logo" :underline="false" href="../">
-            <img src="https://cdn.jsdelivr.net/gh/JingqingLin/ImageHosting/img/592aef2edd2d3.png" width="48px" />
+          <el-link class="link-logo"
+                   :underline="false"
+                   href="../">
+            <img src="https://cdn.jsdelivr.net/gh/JingqingLin/ImageHosting/img/592aef2edd2d3.png"
+                 width="48px" />
           </el-link>
           <span class="span-logo">SightLens</span>
         </div>
-        <el-row :gutter="20">
+        <el-row type="flex"
+                :gutter="20">
           <el-col :span="8">
             <el-autocomplete popper-class="my-autocomplete"
-            v-model="sight" :fetch-suggestions="querySearchAsync"
-            placeholder="输入景点名称以搜索" @select="handleSelect" clearable style="width: 70%;">
-            <i
-            class="el-icon-search el-input__icon"
-            slot="suffix">
-            </i>
-            <template slot-scope="{ item }">
-              <div class="name">{{ item.value }}</div>
-              <span class="addr">{{ item.address }}</span>
-            </template>
+                             v-model="sight"
+                             :fetch-suggestions="querySearchAsync"
+                             placeholder="输入景点名称以搜索"
+                             @select="handleSelect"
+                             clearable
+                             style="width: 70%;">
+              <i class="el-icon-search el-input__icon"
+                 slot="suffix">
+              </i>
+              <template slot-scope="{ item }">
+                <div class="name">{{ item.value }}</div>
+                <span class="addr">{{ item.address }}</span>
+              </template>
             </el-autocomplete>
           </el-col>
         </el-row>
-        <el-dropdown @command="handleCommand" trigger="click">
-          <el-button class="button-user" icon="el-icon-user" circle></el-button>
+        <el-dropdown class="dropdown-user"
+                     @command="handleCommand"
+                     trigger="click">
+          <el-button icon="el-icon-user"
+                     circle></el-button>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="settings" icon="el-icon-setting">设置</el-dropdown-item>
-            <el-dropdown-item command="logout" icon="el-icon-delete">退出</el-dropdown-item>
+            <el-dropdown-item command="settings"
+                              icon="el-icon-setting">设置</el-dropdown-item>
+            <el-dropdown-item command="logout"
+                              icon="el-icon-delete">退出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </el-header>
@@ -107,88 +120,93 @@ export default {
 </script>
 
 <style lang="less">
-  .home-container {
-    height: 100%;
-  }
+.home-container {
+  height: 100%;
+}
 
-  .el-header {
-    display: flex;
-    justify-content: space-between;
-    padding-left: 0;
-    align-items: center;
-    color: #303133;
-    font-size: 20px;
-    border: 0px solid #dcdfe6;
-    border-top: none;
-    border-left: none;
-    border-right: none;
-    box-shadow: rgba(0, 0, 0, 0.1) 0 0 6px;
-    backdrop-filter: blur(15px);
-    background: rgba(255, 255, 255, 0.7);
-    z-index: 2;
-    position: fixed;
-    top: 0;
-    width: 100%;
-  }
+.el-header {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 0;
+  align-items: center;
+  color: #303133;
+  font-size: 20px;
+  border: 0px solid #dcdfe6;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 0 6px;
+  backdrop-filter: blur(15px);
+  background: rgba(255, 255, 255, 0.7);
+  z-index: 15 !important;
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
 
-  .link-logo {
-    display: flex;
-    align-items: center;
-  }
+.link-logo {
+  display: flex;
+  align-items: center;
+}
 
-  .span-logo {
-    font-family: 'Miriam Libre';
-    position: relative;
-    top: 11px;
-  }
+.span-logo {
+  font-family: "Miriam Libre";
+  position: relative;
+  top: 11px;
+}
 
-  .main {
-    color: #333;
-    position: relative;
-    top: 75px;
-    left: 3vw;
-    width: 94vw;
-    .el-row {
-      margin-top: 10px;
-      .el-col {
-        margin-left: 25px;
-      }
+.main {
+  color: #333;
+  position: relative;
+  top: 75px;
+  left: 3vw;
+  width: 94vw;
+  .el-row {
+    margin-top: 10px;
+    .el-col {
+      margin-left: 25px;
     }
   }
+}
 
-  .el-footer {
-    position: relative;
-    top: 75px;
-    background-color: #fff;
-    color: #333;
-    text-align: center;
-  }
+.el-footer {
+  position: relative;
+  top: 75px;
+  background-color: #fff;
+  color: #333;
+  text-align: center;
+}
 
-  .my-autocomplete {
-    li {
-      line-height: normal !important;
-      padding: 7px !important;
-      padding-left: 17px !important;
+.my-autocomplete {
+  li {
+    line-height: normal !important;
+    padding: 7px !important;
+    padding-left: 17px !important;
 
-      .name {
-        text-overflow: ellipsis;
-        overflow: hidden;
-      }
-      .addr {
-        font-size: 12px;
-        color: #b4b4b4;
-      }
-      .highlighted .addr {
-        color: #ddd;
-      }
+    .name {
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+    .addr {
+      font-size: 12px;
+      color: #b4b4b4;
+    }
+    .highlighted .addr {
+      color: #ddd;
     }
   }
+}
 
-  .el-autocomplete-suggestion__wrap {
-    margin-bottom: 0px !important;
-  }
+.el-autocomplete-suggestion__wrap {
+  margin-bottom: 0px !important;
+}
 
-  .home-scroll {
-    height: 100%;
-  }
+.dropdown-user {
+  position: relative;
+  right: 10px;
+}
+
+.home-scroll {
+  height: 100%;
+}
 </style>

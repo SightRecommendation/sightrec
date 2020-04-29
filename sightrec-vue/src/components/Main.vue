@@ -2,62 +2,95 @@
   <div class="mainPage">
     <h2>最受欢迎</h2>
     <el-row>
-      <el-col :span="4" v-for="(sight, index1) in parsedPopularList" :key="index1">
-        <span v-for="(imageUrl, index2) in sight.imageUrl" :key="index2">
+      <el-col :span="4"
+              v-for="(sight, index1) in parsedPopularList"
+              :key="index1">
+        <span v-for="(imageUrl, index2) in sight.imageUrl"
+              :key="index2">
           <!-- 只显示每个景点的第一张图片 -->
-          <el-card shadow="hover" v-if="index2 < 1" :body-style="{ padding: '0px' }">
-            <img :src="imageUrl" class="card-image">
+          <el-card shadow="hover"
+                   v-if="index2 < 1"
+                   :body-style="{ padding: '0px' }">
+            <img :src="imageUrl"
+                 @click="jumpSightDetail(sight.id)"
+                 class="card-image">
             <div class="card-description">
               <span>{{sight.name}}</span>
               <div class="card-bottom clearfix">
                 <time class="card-time">{{sight.description}}</time>
-                <el-button type="text" class="card-button" @click="jumpSightDetail(sight.id)">更多</el-button>
+                <el-button type="text"
+                           class="card-button"
+                           @click="jumpSightDetail(sight.id)">更多</el-button>
               </div>
             </div>
           </el-card>
         </span>
       </el-col>
-      <el-button class="button-next" icon="el-icon-arrow-right" circle></el-button>
+      <el-button class="button-next"
+                 icon="el-icon-arrow-right"
+                 circle></el-button>
     </el-row>
     <el-divider></el-divider>
     <h2>好评最多</h2>
     <el-row>
-      <el-col :span="4" v-for="(sight, index1) in parsedHighratedList" :key="index1">
-        <span v-for="(imageUrl, index2) in sight.imageUrl" :key="index2">
+      <el-col :span="4"
+              v-for="(sight, index1) in parsedHighratedList"
+              :key="index1">
+        <span v-for="(imageUrl, index2) in sight.imageUrl"
+              :key="index2">
           <!-- 只显示每个景点的第一张图片 -->
-          <el-card shadow="hover" v-if="index2 < 1" :body-style="{ padding: '0px' }">
-            <img :src="imageUrl" class="card-image">
+          <el-card shadow="hover"
+                   v-if="index2 < 1"
+                   :body-style="{ padding: '0px' }">
+            <img :src="imageUrl"
+                 @click="jumpSightDetail(sight.id)"
+                 class="card-image">
             <div class="card-description">
               <span>{{sight.name}}</span>
               <div class="card-bottom clearfix">
                 <time class="card-time">{{sight.description}}</time>
-                <el-button type="text" class="card-button" @click="jumpSightDetail(sight.id)">更多</el-button>
+                <el-button type="text"
+                           class="card-button"
+                           @click="jumpSightDetail(sight.id)">更多</el-button>
               </div>
             </div>
           </el-card>
         </span>
       </el-col>
-      <el-button class="button-next" icon="el-icon-arrow-right" circle></el-button>
+      <el-button class="button-next"
+                 icon="el-icon-arrow-right"
+                 circle></el-button>
     </el-row>
     <el-divider></el-divider>
     <h2>为你推荐</h2>
     <el-row>
-      <el-col :span="4" v-for="(sight, index1) in parsedrecommendedList" :key="index1">
-        <span v-for="(imageUrl, index2) in sight.imageUrl" :key="index2">
+      <el-col :span="4"
+              v-for="(sight, index1) in parsedrecommendedList"
+              :key="index1">
+        <span v-for="(imageUrl, index2) in sight.imageUrl"
+              :key="index2">
           <!-- 只显示每个景点的第一张图片 -->
-          <el-card shadow="hover" v-if="index2 < 1" :body-style="{ padding: '0px' }">
-            <img :src="imageUrl" class="card-image">
+          <el-card shadow="hover"
+                   v-if="index2 < 1"
+                   :body-style="{ padding: '0px' }">
+            <img :src="imageUrl"
+                 @click="jumpSightDetail(sight.id)"
+                 class="card-image">
             <div class="card-description">
               <span>{{sight.name}}</span>
               <div class="card-bottom clearfix">
                 <time class="card-time">{{sight.description}}</time>
-                <el-button type="text" class="card-button" @click="jumpSightDetail(sight.id)">更多</el-button>
+                <el-button type="text"
+                           class="card-button"
+                           @click="jumpSightDetail(sight.id)">更多</el-button>
               </div>
             </div>
           </el-card>
         </span>
       </el-col>
-      <el-button class="button-next" icon="el-icon-arrow-right" circle></el-button>
+      <el-button class="button-next"
+                 icon="el-icon-arrow-right"
+                 circle></el-button>
     </el-row>
   </div>
 </template>
@@ -70,7 +103,7 @@ export default {
       popularQueryInfo: {
         query: '',
         // 当前的页数
-        pageNum: 1,
+        pageNum: 4,
         // 当前每页显示多少条数据
         pageSize: 5
       },
@@ -162,45 +195,53 @@ export default {
 </script>
 
 <style lang="less">
-  .el-card {
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-  }
-  .card-description {
-    padding-bottom: 0px;
-    padding-left: 14px;
-    padding-top: 14px;
-    padding-right: 14px;
-  }
-  .card-time {
-    font-size: 13px;
-    color: #909399;
-  }
-  .card-bottom {
-    margin-top: 13px;
-    line-height: 12px;
-  }
-  .card-button {
-    padding: 0;
-    float: right;
-  }
-  .card-image {
-    width: 200%;
-    position: relative;
-    right: 60px;
-    display: block;
-  }
-  .clearfix:before,
-  .clearfix:after {
-    display: table;
-    content: "";
-  }
-  .clearfix:after {
-    clear: both
-  }
+.el-card {
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+}
 
-  .button-next {
-    position: relative;
-    top: 125px;
-    left: 30px;
-  }
+.card-description {
+  padding-bottom: 0px;
+  padding-left: 14px;
+  padding-top: 14px;
+  padding-right: 14px;
+}
+
+.card-time {
+  font-size: 13px;
+  color: #909399;
+}
+
+.card-bottom {
+  margin-top: 13px;
+  line-height: 12px;
+}
+
+.card-button {
+  padding: 0;
+  float: right;
+}
+
+.card-image {
+  width: 200%;
+  position: relative;
+  right: 60px;
+  display: block;
+  cursor: pointer;
+}
+
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
+
+.clearfix:after {
+  clear: both;
+}
+
+.button-next {
+  position: relative;
+  top: 125px;
+  left: 30px;
+}
 </style>
