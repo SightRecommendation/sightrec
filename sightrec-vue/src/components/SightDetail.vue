@@ -53,8 +53,9 @@
               </span>
             </p><br />
             <el-button style="position: relative;margin-right: 225px;"
-                       type="primary"
-                       icon="el-icon-shopping-cart-2">收藏景点</el-button>
+                       :type=favoriteButtonType
+                       :icon=favoriteButtonIcon
+                       @click="addSightToFavorite"> {{this.favoriteButtonText}} </el-button>
             <div class="button-shared">
               <div>
                 <i class="el-icon-share"></i><span style="color: #909399;margin-right: 70px;"> 分享：</span>
@@ -167,6 +168,7 @@ export default {
   data () {
     return {
       id: this.$route.params.sightId,
+      loginUserId: window.sessionStorage.getItem('id'),
       sightDetail: {},
       parsedsightDetail: {},
       activeName: 'first',
@@ -218,7 +220,10 @@ export default {
       // isClickedStar: false,
       userRate: 0,
       starGray: require('../assets/images/star_hollow_hover@2x.png'),
-      starLight: require('../assets/images/star_onmouseover@2x.png')
+      starLight: require('../assets/images/star_onmouseover@2x.png'),
+      favoriteButtonType: 'primary',
+      favoriteButtonIcon: 'el-icon-star-off',
+      favoriteButtonText: '收藏景点'
     }
   },
   created () {
@@ -283,6 +288,20 @@ export default {
       for (let i = 0; i < this.similarList.length; i++) {
         this.parsedSimilarList[i].imageUrl = JSON.parse(this.parsedSimilarList[i].imageUrl)
       }
+    },
+    async addSightToFavorite () {
+      const { data: res } = await this.$http.post('favorites/', {
+        sightId: this.id,
+        userId: this.loginUserId
+      })
+      if (res.meta.status !== 200) {
+        console.log(res)
+        return this.$message.error('收藏失败！')
+      }
+      this.$message.success('收藏成功！')
+      this.favoriteButtonType = 'success'
+      this.favoriteButtonIcon = 'el-icon-check'
+      this.favoriteButtonText = '已收藏'
     },
     // 监听 pageSize 改变的事件
     handleSizeChange (newSize) {
