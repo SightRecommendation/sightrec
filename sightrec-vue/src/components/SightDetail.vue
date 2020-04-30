@@ -26,8 +26,8 @@
                   <img class="stars" :src="starNums>index?starLight:starGray" width="50%"/>
                 </li>
               </ul> -->
-              <el-rate v-model="userRate"
-                       @change="changeRate"></el-rate>
+              <el-rate v-model="newUserRating"
+                       @change="changeRating"></el-rate>
             </div>
             <span style="font-size: small;"> {{ parsedsightDetail.level }}</span>
             <p style="font-size: 15px;color: #909399;">{{ parsedsightDetail.description }}</p><br />
@@ -230,7 +230,8 @@ export default {
       // starList: [0, 1, 2, 3, 4],
       // starNums: 0,
       // isClickedStar: false,
-      userRate: 0,
+      userRating: 0,
+      newUserRating: 0,
       starGray: require('../assets/images/star_hollow_hover@2x.png'),
       starLight: require('../assets/images/star_onmouseover@2x.png'),
       isInFavorite: false
@@ -240,6 +241,7 @@ export default {
     this.getSightDetail(this.id)
     this.getSightCommentList()
     this.isSightInFavorite()
+    this.getUserRating()
   },
   beforeRouteUpdate (to, from, next) {
     this.id = to.params.sightId
@@ -247,6 +249,7 @@ export default {
     this.getSightDetail(this.id)
     this.getSightCommentList()
     this.isSightInFavorite()
+    this.getUserRating()
     next()
   },
   methods: {
@@ -344,6 +347,40 @@ export default {
       this.$message.success('取消收藏！')
       this.isInFavorite = false
     },
+    async getUserRating () {
+      const { data: res } = await this.$http.get('ratings/', {
+        params: { sightId: this.id, userId: this.loginUserId }
+      })
+      // if (res.meta.status !== 200) {
+      //   return this.$message.error(res.meta.msg)
+      // }
+      this.userRating = res.data
+      this.newUserRating = res.data
+    },
+    async changeRating () {
+      // 先判断原来是否评过分
+      if (this.userRating === 0) {
+        await this.$http.post('ratings/', {
+          sightId: this.id,
+          userId: this.loginUserId,
+          rating: this.newUserRating
+        })
+        // if (res.meta.status !== 200) {
+        //   return this.$message.error(res.meta.msg)
+        // }
+        this.userRating = this.newUserRating
+      } else {
+        const { data: res } = await this.$http.put('ratings/', {
+          sightId: this.id,
+          userId: this.loginUserId,
+          rating: this.newUserRating
+        })
+        if (res.meta.status !== 200) {
+          return this.$message.error(res.meta.msg)
+        }
+        this.userRating = this.newUserRating
+      }
+    },
     // 监听 pageSize 改变的事件
     handleSizeChange (newSize) {
       this.commentQueryInfo.pageSize = newSize
@@ -353,8 +390,6 @@ export default {
     handleCurrentChange (newPage) {
       this.commentQueryInfo.pageNum = newPage
       this.getSightCommentList()
-    },
-    changeRate () {
     },
     jumpSightDetail (id) {
       this.$router.push({

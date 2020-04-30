@@ -31,7 +31,7 @@ public class FavoriteServiceImpl implements FavoriteService {
     }
 
     @Override
-    public void addToFavorite(Favorite favorite) {
+    public boolean addToFavorite(Favorite favorite) {
         try {
             // 判断是否已收藏
             List<Favorite> getFromFavorite = favoriteDao.isExistInFavorite(favorite);
@@ -41,8 +41,10 @@ public class FavoriteServiceImpl implements FavoriteService {
                 }
             }
             int success = favoriteDao.addToFavorite(favorite);
-            if (success <= 0) {
-                throw new RuntimeException("添加至收藏夹失败");
+            if (success > 0) {
+                return true;
+            } else {
+                throw new RuntimeException("数据库操作失败");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -51,11 +53,13 @@ public class FavoriteServiceImpl implements FavoriteService {
     }
 
     @Override
-    public void removeFromFavorite(int sightId, int userId) {
+    public boolean removeFromFavorite(int sightId, int userId) {
         try {
             int success = favoriteDao.removeFromFavorite(sightId, userId);
-            if (success <= 0) {
-                throw new RuntimeException("取消收藏失败：数据库 return");
+            if (success > 0) {
+                return true;
+            } else {
+                throw new RuntimeException("数据库操作失败");
             }
         } catch (Exception e) {
             throw new RuntimeException("取消收藏失败：catch");

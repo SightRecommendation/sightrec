@@ -5,7 +5,7 @@ import com.wlc.sightrec.entity.Favorite;
 public interface FavoriteService {
     boolean isExistInFavorite(Favorite favorite);
 
-    void addToFavorite(Favorite favorite);
+    boolean addToFavorite(Favorite favorite);
 
-    void removeFromFavorite(int sightId, int userId);
+    boolean removeFromFavorite(int sightId, int userId);
 }
