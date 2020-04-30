@@ -114,10 +114,10 @@
                    shadow="never">
             <div style="display:flex">
               <el-avatar style="margin-right: 10px;"
-                         src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
+                         :src=loginUserHeadUrl></el-avatar>
               <el-input type="textarea"
                         placeholder="你的想法 ~"
-                        :autosize="{ minRows: 5}"
+                        :autosize="{ minRows: 5 }"
                         v-model="myComment"
                         maxlength="1200"
                         show-word-limit>
@@ -182,6 +182,8 @@ export default {
     return {
       id: this.$route.params.sightId,
       loginUserId: window.sessionStorage.getItem('id'),
+      loginUserHeadUrl: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
+      loginUserName: '匿名游客',
       sightDetail: {},
       parsedsightDetail: {},
       activeName: 'first',
@@ -283,13 +285,21 @@ export default {
         const { data: res } = await this.$http.get('users/', {
           params: this.userQueryInfo
         })
-        console.log(res.data)
         if (res.meta.status !== 200) {
           return this.$message.error('获取用户失败！')
         }
         var tempUser = res.data
         this.userList[i] = tempUser
       }
+      // 获取登录用户的头像
+      const { data: res } = await this.$http.get('users/', {
+        params: { id: this.loginUserId }
+      })
+      if (res.meta.status !== 200) {
+        return this.$message.error('获取用户失败！')
+      }
+      this.loginUserHeadUrl = res.data.headUrl
+      this.loginUserName = res.data.name
     },
     async getSimilarSightList () {
       this.similarQueryInfo.query = await (this.sightDetail.subject || '').split(',')[0]
@@ -394,8 +404,29 @@ export default {
         this.$message.error('添加评论失败！')
       }
       this.$message.success('添加评论成功！')
+      this.commentQueryInfo.pageSize++
+      this.commentList[this.commentQueryInfo.pageSize - 1] = {
+        content: this.myComment,
+        userId: this.loginUserId,
+        createdDate: this.dateFormat()
+      }
+      this.userList[this.commentQueryInfo.pageSize - 1] = {
+        name: this.loginUserName,
+        headUrl: this.loginUserHeadUrl
+      }
       this.myComment = ''
-      this.getSightCommentList()
+    },
+    dateFormat () {
+      var date = new Date()
+      var year = date.getFullYear()
+      // 小于 10 的前面加 0
+      var month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1
+      var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
+      var hours = date.getHours() < 10 ? '0' + date.getHours() : date.getHours()
+      var minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()
+      var seconds = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
+      // 拼接
+      return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds
     },
     // 监听 pageSize 改变的事件
     handleSizeChange (newSize) {

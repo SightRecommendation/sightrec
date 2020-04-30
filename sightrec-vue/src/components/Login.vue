@@ -13,11 +13,13 @@
         <!--        用户名-->
         <el-form-item prop="name">
           <el-input v-model="loginForm.name"
+                    @keyup.enter.native="login"
                     prefix-icon="el-icon-user"></el-input>
         </el-form-item>
         <!--        密码-->
         <el-form-item prop="password">
           <el-input v-model="loginForm.password"
+                    @keyup.enter.native="login"
                     prefix-icon="el-icon-lock"
                     show-password></el-input>
         </el-form-item>
