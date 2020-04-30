@@ -65,4 +65,13 @@ public class FavoriteServiceImpl implements FavoriteService {
             throw new RuntimeException("取消收藏失败：catch");
         }
     }
+
+    @Override
+    public List<Favorite> getUserFavorite(int userId) {
+        try {
+            return favoriteDao.getUserFavorite(userId);
+        } catch (Exception e) {
+            throw new RuntimeException("获取我的收藏失败");
+        }
+    }
 }

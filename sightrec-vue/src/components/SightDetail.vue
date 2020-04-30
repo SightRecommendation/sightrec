@@ -419,6 +419,7 @@ export default {
     dateFormat () {
       var date = new Date()
       var year = date.getFullYear()
+      // 在日期格式中，月份是从 0 开始的
       // 小于 10 的前面加 0
       var month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1
       var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()

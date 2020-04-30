@@ -1,71 +1,43 @@
 <template>
   <div class="settings">
+    <!-- 面包屑导航区域 -->
+    <el-breadcrumb separator-class="el-icon-arrow-right">
+      <el-breadcrumb-item :to="{ path: 'user/settings' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item>我的收藏</el-breadcrumb-item>
+    </el-breadcrumb>
+
     <el-card>
-      <el-form style="width: 45%;"
-               :model="userForm"
-               ref="userFormRef"
-               :rules="userFormRules"
-               label-width="100px">
-        <!-- prop 为 userFormRules 中的验证规则 -->
-        <el-form-item label="用户名"
-                      prop="name">
-          <el-input maxlength="12"
-                    show-word-limit
-                    v-model="userForm.name"
-                    clearable></el-input>
-          <span style="font-size: small;color: #909399;">数字 ID：{{ userForm.id }}</span>
-        </el-form-item>
-        <el-form-item label="头像">
-          <el-tooltip class="item"
-                      effect="dark"
-                      content="点击图片更换头像"
-                      placement="left">
-            <el-upload class="avatar-uploader"
-                       action="https://jsonplaceholder.typicode.com/posts/"
-                       :show-file-list="false"
-                       :on-success="handleAvatarSuccess"
-                       :before-upload="beforeAvatarUpload">
-              <img v-if="userForm.headUrl"
-                   :src="userForm.headUrl"
-                   class="avatar">
-              <i v-else
-                 class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
-          </el-tooltip>
-          <span style="font-size: small;color: #909399;">头像修改自动保存</span>
-        </el-form-item>
-        <el-form-item label="邮箱">
-          <el-input placeholder="请输入邮箱"
-                    v-model="userForm.email"
-                    clearable></el-input>
-        </el-form-item>
-        <el-form-item label="手机"
-                      prop="phone">
-          <el-input placeholder="请输入手机号"
-                    type="number"
-                    v-model="userForm.phone"
-                    clearable></el-input>
-        </el-form-item>
-        <el-form-item label="修改密码"
-                      prop="password">
-          <el-input placeholder="请输入新密码"
-                    v-model="userForm.password"
-                    show-password
-                    clearable></el-input>
-        </el-form-item>
-        <el-form-item label="确认密码"
-                      prop="checkPassword">
-          <el-input placeholder="确认密码"
-                    v-model="userForm.checkPassword"
-                    show-password
-                    clearable></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary"
-                     @click="editUserInfo">保存修改</el-button>
-          <el-button @click="resetForm('userFormRef')">重 置</el-button>
-        </el-form-item>
-      </el-form>
+      <p>
+        <i class="el-icon-shopping-cart-2"></i>
+        <span> 我的收藏</span>
+      </p><br />
+      <el-row :gutter="10">
+        <el-col :span="5"
+                v-for="(sight, index1) in parsedFavoriteSightList"
+                :key="index1"
+                style="margin-left: 30px">
+          <span v-for="(imageUrl, index2) in sight.imageUrl"
+                :key="index2">
+            <!-- 只显示每个景点的第一张图片 -->
+            <el-card shadow="hover"
+                     v-if="index2 < 1"
+                     :body-style="{ padding: '0px' }">
+              <img :src="imageUrl"
+                   @click="jumpSightDetail(sight.id)"
+                   class="card-image">
+              <div class="card-description">
+                <span>{{sight.name}}</span>
+                <div class="card-bottom clearfix">
+                  <time class="card-time">{{sight.description}}</time>
+                  <el-button type="text"
+                             class="card-button"
+                             @click="removeSightFromFavorite(sight.id)">取消收藏</el-button>
+                </div>
+              </div>
+            </el-card>
+          </span>
+        </el-col>
+      </el-row>
     </el-card>
   </div>
 </template>
@@ -73,83 +45,83 @@
 <script>
 export default {
   data () {
-    var validatePass = (rule, value, callback) => {
-      if (value !== this.userForm.password) {
-        callback(new Error('两次输入密码不一致!'))
-      } else {
-        callback()
-      }
-    }
     return {
-      userName: window.sessionStorage.getItem('name'),
-      userForm: {
-        id: window.sessionStorage.getItem('id'),
-        name: window.sessionStorage.getItem('name'),
-        headUrl: '',
-        email: '',
-        phone: '',
-        password: '',
-        checkPassword: ''
-      },
-      userFormRules: {
-        name: [
-          { required: true, message: '请输入用户名', trigger: 'blur' }
-        ],
-        password: [
-          { required: false, message: '请输入密码', trigger: 'blur' },
-          { min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur' }
-        ],
-        checkPassword: [
-          { required: false, validator: validatePass, trigger: 'blur' }
-        ]
-      }
+      loginUserName: window.sessionStorage.getItem('name'),
+      loginUserId: window.sessionStorage.getItem('id'),
+      favoriteSightIdList: [],
+      favoriteSightList: [],
+      parsedFavoriteSightList: []
     }
   },
   created () {
-    this.getUserInfo()
+    this.getUserFavoriteSightId()
   },
   methods: {
-    async getUserInfo () {
-      const { data: res } = await this.$http.get('users', {
-        params: { id: this.userForm.id }
+    async getUserFavoriteSightId () {
+      const { data: res } = await this.$http.get('favorites/userId', {
+        params: { userId: this.loginUserId }
       })
       if (res.meta.status !== 200) {
-        return this.$message.error('获取用户信息失败！')
+        return this.$message.error(res.meta.msg)
       }
-      this.userForm.email = res.data.email
-      this.userForm.phone = res.data.phone
-      this.userForm.headUrl = res.data.headUrl
+      this.favoriteSightIdList = []
+      for (let i = 0; i < res.data.length; i++) {
+        this.favoriteSightIdList[i] = res.data[i]
+      }
+      this.getUserFavoriteSightDetail()
     },
-    // 修改用户信息并提交
-    editUserInfo () {
-      this.$refs.userFormRef.validate(async valid => {
-        if (!valid) return
-        const { data: res } = await this.$http.put('users/', this.userForm)
+    async getUserFavoriteSightDetail () {
+      for (let i = 0; i < this.favoriteSightIdList.length; i++) {
+        const { data: res } = await this.$http.get(
+          'sights/' + this.favoriteSightIdList[i].sightId)
         if (res.meta.status !== 200) {
           return this.$message.error(res.meta.msg)
         }
-        console.log(res)
-        // 提示修改成功
-        this.$message.success('修改成功！')
-      })
+        this.favoriteSightList[i] = res.data
+      }
+      this.parsedFavoriteSightList = []
+      this.parsedFavoriteSightList = this.favoriteSightList
+      for (let i = 0; i < this.favoriteSightIdList.length; i++) {
+        this.parsedFavoriteSightList[i].imageUrl = JSON.parse(this.parsedFavoriteSightList[i].imageUrl)
+      }
     },
-    handleAvatarSuccess (res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw)
-    },
-    beforeAvatarUpload (file) {
-      const isJPG = file.type === 'image/jpeg'
-      const isLt2M = file.size / 1024 / 1024 < 2
+    async removeSightFromFavorite (id) {
+      // 弹框询问用户是否删除数据
+      const confirmResult = await this.$confirm(
+        '此操作将取消收藏此景点, 是否继续？',
+        '提示',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      ).catch(err => err)
 
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!')
+      if (confirmResult !== 'confirm') {
+        return this.$message.info('取消操作')
       }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
+
+      const { data: res } = await this.$http.delete('favorites/' + id + '/' + this.loginUserId)
+      if (res.meta.status !== 200) {
+        return this.$message.error(res.meta.msg)
       }
-      return isJPG && isLt2M
+      this.$message.success('取消收藏成功！')
+      // 取消收藏成功后，把对应的景点从景点列表中去掉
+      var tempList = this.parsedFavoriteSightList
+      this.parsedFavoriteSightList = []
+      var index = 0
+      for (let i = 0; i < tempList.length; i++) {
+        if (tempList[i].id === id) {
+          continue
+        }
+        this.parsedFavoriteSightList[index++] = tempList[i]
+      }
+      console.log(this.parsedFavoriteSightList)
     },
-    resetForm (ruleForm) {
-      this.$refs[ruleForm].resetFields()
+    jumpSightDetail (id) {
+      this.$router.push({
+        path: `/sight/${id}`
+      })
     }
   }
 }

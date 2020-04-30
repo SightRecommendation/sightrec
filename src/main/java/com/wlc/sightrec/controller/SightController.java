@@ -128,11 +128,11 @@ public class SightController {
         try {
             Sight sightById = sightService.getSightById(id);
             getSight.put("data", sightById);
-            getSight.put("meta", JsonUtil.getMeta("获取景点列表成功", 200));
+            getSight.put("meta", JsonUtil.getMeta("获取景点成功", 200));
             return getSight;
         } catch (Exception e) {
             getSight.put("data", null);
-            getSight.put("meta", JsonUtil.getMeta("获取景点列表失败", 400));
+            getSight.put("meta", JsonUtil.getMeta("获取景点失败", 400));
             return getSight;
         }
     }

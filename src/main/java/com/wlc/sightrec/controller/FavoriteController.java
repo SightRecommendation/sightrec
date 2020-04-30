@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 public class FavoriteController {
@@ -19,7 +20,7 @@ public class FavoriteController {
     @RequestMapping(path = {"/favorites"}, method = {RequestMethod.GET})
     public JSONObject isExistInFavorite(@RequestParam("sightId") int sightId,
                                         @RequestParam("userId") int userId,
-                                    HttpServletRequest request, HttpServletResponse response) {
+                                        HttpServletRequest request, HttpServletResponse response) {
         // token 验证没写
         String auth = request.getHeader("Authorization");
 
@@ -39,6 +40,25 @@ public class FavoriteController {
         } catch (Exception e) {
             addToFavorite.put("data", false);
             addToFavorite.put("meta", JsonUtil.getMeta("判断是否位于收藏夹失败", 400));
+            return addToFavorite;
+        }
+    }
+
+    @RequestMapping(path = {"/favorites/userId"}, method = {RequestMethod.GET})
+    public JSONObject getUserFavorite(@RequestParam("userId") int userId,
+                                      HttpServletRequest request, HttpServletResponse response) {
+        // token 验证没写
+        String auth = request.getHeader("Authorization");
+
+        JSONObject addToFavorite = new JSONObject();
+        try {
+            List<Favorite> favoriteList = favoriteService.getUserFavorite(userId);
+            addToFavorite.put("data", favoriteList);
+            addToFavorite.put("meta", JsonUtil.getMeta("获取我的收藏成功", 200));
+            return addToFavorite;
+        } catch (Exception e) {
+            addToFavorite.put("data", null);
+            addToFavorite.put("meta", JsonUtil.getMeta("获取我的收藏失败", 400));
             return addToFavorite;
         }
     }

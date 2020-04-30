@@ -1,70 +1,86 @@
 <template>
   <div class="settings">
+    <!-- 面包屑导航区域 -->
+    <el-breadcrumb separator-class="el-icon-arrow-right">
+      <el-breadcrumb-item :to="{ path: 'user/settings' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item>基本资料</el-breadcrumb-item>
+    </el-breadcrumb>
+
     <el-card>
-      <el-form style="width: 45%;"
+      <p>
+        <i class="el-icon-user"></i>
+        <span> 基本资料</span>
+      </p><br />
+      <el-form style="width: 95%;"
                :model="userForm"
                ref="userFormRef"
                :rules="userFormRules"
                label-width="100px">
-        <!-- prop 为 userFormRules 中的验证规则 -->
-        <el-form-item label="用户名"
-                      prop="name">
-          <el-input maxlength="12"
-                    show-word-limit
-                    v-model="userForm.name"
-                    clearable></el-input>
-          <span style="font-size: small;color: #909399;">数字 ID：{{ userForm.id }}</span>
-        </el-form-item>
-        <el-form-item label="头像">
-          <el-tooltip class="item"
-                      effect="dark"
-                      content="点击图片更换头像"
-                      placement="left">
-            <el-upload class="avatar-uploader"
-                       action="https://jsonplaceholder.typicode.com/posts/"
-                       :show-file-list="false"
-                       :on-success="handleAvatarSuccess"
-                       :before-upload="beforeAvatarUpload">
-              <img v-if="userForm.headUrl"
-                   :src="userForm.headUrl"
-                   class="avatar">
-              <i v-else
-                 class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
-          </el-tooltip>
-          <span style="font-size: small;color: #909399;">头像修改自动保存</span>
-        </el-form-item>
-        <el-form-item label="邮箱">
-          <el-input placeholder="请输入邮箱"
-                    v-model="userForm.email"
-                    clearable></el-input>
-        </el-form-item>
-        <el-form-item label="手机"
-                      prop="phone">
-          <el-input placeholder="请输入手机号"
-                    type="number"
-                    v-model="userForm.phone"
-                    clearable></el-input>
-        </el-form-item>
-        <el-form-item label="修改密码"
-                      prop="password">
-          <el-input placeholder="请输入新密码"
-                    v-model="userForm.password"
-                    show-password
-                    clearable></el-input>
-        </el-form-item>
-        <el-form-item label="确认密码"
-                      prop="checkPassword">
-          <el-input placeholder="确认密码"
-                    v-model="userForm.checkPassword"
-                    show-password
-                    clearable></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary"
-                     @click="editUserInfo">保存修改</el-button>
-          <el-button @click="resetForm('userFormRef')">重 置</el-button>
-        </el-form-item>
+        <el-row>
+          <el-col :span="12">
+            <!-- prop 为 userFormRules 中的验证规则 -->
+            <el-form-item label="用户名"
+                          prop="name">
+              <el-input maxlength="12"
+                        show-word-limit
+                        v-model="userForm.name"
+                        clearable></el-input>
+              <span style="font-size: small;color: #909399;">数字 ID：{{ userForm.id }}</span>
+            </el-form-item>
+            <el-form-item label="头像">
+              <el-tooltip class="item"
+                          effect="dark"
+                          content="点击图片更换头像"
+                          placement="left">
+                <el-upload class="avatar-uploader"
+                           action="https://jsonplaceholder.typicode.com/posts/"
+                           :show-file-list="false"
+                           :on-success="handleAvatarSuccess"
+                           :before-upload="beforeAvatarUpload">
+                  <img v-if="userForm.headUrl"
+                       :src="userForm.headUrl"
+                       class="avatar">
+                  <i v-else
+                     class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload>
+              </el-tooltip>
+              <span style="font-size: small;color: #909399;">头像修改自动保存</span>
+            </el-form-item>
+            <el-form-item label="邮箱">
+              <el-input placeholder="请输入邮箱"
+                        v-model="userForm.email"
+                        clearable></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary"
+                         @click="editUserInfo">保存修改</el-button>
+              <el-button @click="resetForm('userFormRef')">重 置</el-button>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="手机"
+                          prop="phone">
+              <el-input placeholder="请输入手机号"
+                        type="number"
+                        v-model="userForm.phone"
+                        clearable></el-input>
+            </el-form-item>
+            <el-form-item label="修改密码"
+                          prop="password">
+              <el-input placeholder="请输入新密码"
+                        v-model="userForm.password"
+                        show-password
+                        clearable></el-input>
+            </el-form-item>
+            <el-form-item label="确认密码"
+                          prop="checkPassword">
+              <el-input placeholder="确认密码"
+                        v-model="userForm.checkPassword"
+                        show-password
+                        clearable></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
     </el-card>
   </div>

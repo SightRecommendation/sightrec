@@ -24,4 +24,8 @@ public interface FavoriteDao {
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME,
             " where status=0 and sight_id=#{sightId} and user_id=#{userId}"})
     List<Favorite> isExistInFavorite(Favorite favorite);
+
+    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME,
+            " where status=0 and user_id=#{userId}"})
+    List<Favorite> getUserFavorite(@Param("userId") int userId);
 }
