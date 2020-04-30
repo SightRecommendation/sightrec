@@ -126,6 +126,7 @@
             <div align="right">
               <el-button type="primary"
                          icon="el-icon-check"
+                         @click="addComment"
                          style="position: relative;margin-top: 10px;">写好了</el-button>
             </div>
           </el-card>
@@ -282,8 +283,9 @@ export default {
         const { data: res } = await this.$http.get('users/', {
           params: this.userQueryInfo
         })
+        console.log(res.data)
         if (res.meta.status !== 200) {
-          return this.$message.error('获取评论失败！')
+          return this.$message.error('获取用户失败！')
         }
         var tempUser = res.data
         this.userList[i] = tempUser
@@ -380,6 +382,20 @@ export default {
         }
         this.userRating = this.newUserRating
       }
+    },
+    async addComment () {
+      const { data: res } = await this.$http.post('comments', {
+        content: this.myComment,
+        userId: this.loginUserId,
+        sightId: this.id,
+        createdDate: null
+      })
+      if (res.meta.status !== 200) {
+        this.$message.error('添加评论失败！')
+      }
+      this.$message.success('添加评论成功！')
+      this.myComment = ''
+      this.getSightCommentList()
     },
     // 监听 pageSize 改变的事件
     handleSizeChange (newSize) {

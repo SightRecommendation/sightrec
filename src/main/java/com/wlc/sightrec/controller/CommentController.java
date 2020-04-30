@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -85,6 +86,11 @@ public class CommentController {
 
         JSONObject addComment = new JSONObject();
         try {
+            // 若没有 createdDate，说明是用户从景点详情页评论的，添加当前时间即可
+            if (comment.getCreatedDate() == null) {
+                Date date = new Date();
+                comment.setCreatedDate(date);
+            }
             commentService.addComment(comment);
             addComment.put("data", comment);
             addComment.put("meta", JsonUtil.getMeta("添加评论成功", 200));

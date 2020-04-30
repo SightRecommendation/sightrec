@@ -16,7 +16,6 @@ public class UserController {
 
     @RequestMapping(value = {"/users", ""}, method = RequestMethod.POST, produces = "application/json;charset=utf-8")
     public BaseResponse insertUser(@RequestBody User user) {
-        Map<String, Object> map = new HashMap<String, Object>();
         try {
             userService.insertUser(user);
             return BaseResponse.ok("新增用户成功", null);
@@ -27,7 +26,6 @@ public class UserController {
 
     @RequestMapping(value = {"/users", ""}, method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
     public BaseResponse deleteUser(@RequestParam(value = "id") Integer id) {
-        Map<String, Object> map = new HashMap<String, Object>();
         try {
             userService.deleteUserById(id);
             return BaseResponse.ok("删除用户成功", null);
@@ -38,7 +36,6 @@ public class UserController {
 
     @RequestMapping(value = {"/users", ""}, method = RequestMethod.GET, produces = "application/json;charset=utf-8")
     public BaseResponse queryUserById(@RequestParam(value = "id") Integer id) {
-        Map<String, Object> map = new HashMap<String, Object>();
         try {
             User user = userService.queryUserById(id);
             return BaseResponse.ok("查询成功", user);
