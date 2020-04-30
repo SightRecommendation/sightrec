@@ -66,3 +66,13 @@ CREATE TABLE `sight_subject_relation` (
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE `favorite` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `sight_id` INT NOT NULL,
+  `user_id` INT NOT NULL,
+  `created_date` DATETIME NOT NULL,
+  `status` INT NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;

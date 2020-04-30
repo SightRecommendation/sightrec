@@ -52,10 +52,22 @@
                         style="margin-right: 10px;">{{ item }}</el-tag>
               </span>
             </p><br />
-            <el-button style="position: relative;margin-right: 225px;"
-                       :type=favoriteButtonType
-                       :icon=favoriteButtonIcon
-                       @click="addSightToFavorite"> {{this.favoriteButtonText}} </el-button>
+            <el-button v-if="isInFavorite === false"
+                       style="position: relative;margin-right: 225px;"
+                       type='primary'
+                       icon='el-icon-star-off'
+                       @click="addSightToFavorite"> 收藏景点 </el-button>
+            <el-popover v-if="isInFavorite === true"
+                        trigger="hover"
+                        placement="top-start"
+                        width="120"
+                        content="点击”已收藏“按钮以取消收藏">
+              <el-button slot="reference"
+                         style="position: relative;margin-right: 225px;"
+                         type='success'
+                         icon='el-icon-check'
+                         @click="removeSightFromFavorite"> 已收藏 </el-button>
+            </el-popover>
             <div class="button-shared">
               <div>
                 <i class="el-icon-share"></i><span style="color: #909399;margin-right: 70px;"> 分享：</span>
@@ -221,20 +233,20 @@ export default {
       userRate: 0,
       starGray: require('../assets/images/star_hollow_hover@2x.png'),
       starLight: require('../assets/images/star_onmouseover@2x.png'),
-      favoriteButtonType: 'primary',
-      favoriteButtonIcon: 'el-icon-star-off',
-      favoriteButtonText: '收藏景点'
+      isInFavorite: false
     }
   },
   created () {
     this.getSightDetail(this.id)
     this.getSightCommentList()
+    this.isSightInFavorite()
   },
   beforeRouteUpdate (to, from, next) {
     this.id = to.params.sightId
     this.commentQueryInfo.sightId = to.params.sightId
     this.getSightDetail(this.id)
     this.getSightCommentList()
+    this.isSightInFavorite()
     next()
   },
   methods: {
@@ -289,19 +301,48 @@ export default {
         this.parsedSimilarList[i].imageUrl = JSON.parse(this.parsedSimilarList[i].imageUrl)
       }
     },
+    async isSightInFavorite () {
+      const { data: res } = await this.$http.get('favorites/', {
+        params: { sightId: this.id, userId: this.loginUserId }
+      })
+      if (res.meta.status !== 200) {
+        return this.$message.error(res.meta.msg)
+      }
+      this.isInFavorite = res.data
+    },
     async addSightToFavorite () {
       const { data: res } = await this.$http.post('favorites/', {
         sightId: this.id,
         userId: this.loginUserId
       })
       if (res.meta.status !== 200) {
-        console.log(res)
-        return this.$message.error('收藏失败！')
+        return this.$message.error(res.meta.msg)
       }
       this.$message.success('收藏成功！')
-      this.favoriteButtonType = 'success'
-      this.favoriteButtonIcon = 'el-icon-check'
-      this.favoriteButtonText = '已收藏'
+      this.isInFavorite = true
+    },
+    async removeSightFromFavorite () {
+      // 弹框询问用户是否删除数据
+      const confirmResult = await this.$confirm(
+        '此操作将取消收藏此景点, 是否继续？',
+        '提示',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      ).catch(err => err)
+
+      if (confirmResult !== 'confirm') {
+        return this.$message.info('取消操作')
+      }
+
+      const { data: res } = await this.$http.delete('favorites/' + this.id + '/' + this.loginUserId)
+      if (res.meta.status !== 200) {
+        return this.$message.error(res.meta.msg)
+      }
+      this.$message.success('取消收藏！')
+      this.isInFavorite = false
     },
     // 监听 pageSize 改变的事件
     handleSizeChange (newSize) {

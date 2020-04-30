@@ -16,6 +16,33 @@ public class FavoriteController {
     @Autowired
     FavoriteService favoriteService;
 
+    @RequestMapping(path = {"/favorites"}, method = {RequestMethod.GET})
+    public JSONObject isExistInFavorite(@RequestParam("sightId") int sightId,
+                                        @RequestParam("userId") int userId,
+                                    HttpServletRequest request, HttpServletResponse response) {
+        // token 验证没写
+        String auth = request.getHeader("Authorization");
+
+        JSONObject addToFavorite = new JSONObject();
+        try {
+            // 临时组成一个 Favorite
+            Favorite favorite = new Favorite();
+            favorite.setSightId(sightId);
+            favorite.setUserId(userId);
+            favorite.setStatus(0);
+            Date date = new Date();
+            favorite.setCreatedDate(date);
+            boolean result = favoriteService.isExistInFavorite(favorite);
+            addToFavorite.put("data", result);
+            addToFavorite.put("meta", JsonUtil.getMeta("判断是否位于收藏夹成功", 200));
+            return addToFavorite;
+        } catch (Exception e) {
+            addToFavorite.put("data", false);
+            addToFavorite.put("meta", JsonUtil.getMeta("判断是否位于收藏夹失败", 400));
+            return addToFavorite;
+        }
+    }
+
     @RequestMapping(path = {"/favorites"}, method = {RequestMethod.POST})
     public JSONObject addToFavorite(@RequestBody JSONObject favoriteJson,
                                     HttpServletRequest request, HttpServletResponse response) {
@@ -24,7 +51,6 @@ public class FavoriteController {
 
         JSONObject addToFavorite = new JSONObject();
         try {
-            // 判断重复收藏没写
             Favorite favorite = new Favorite();
             favorite.setSightId(favoriteJson.getInteger("sightId"));
             favorite.setUserId(favoriteJson.getInteger("userId"));
@@ -37,12 +63,12 @@ public class FavoriteController {
             return addToFavorite;
         } catch (Exception e) {
             addToFavorite.put("data", null);
-            addToFavorite.put("meta", JsonUtil.getMeta("添加收藏失败", 400));
+            addToFavorite.put("meta", JsonUtil.getMeta(e.getMessage(), 400));
             return addToFavorite;
         }
     }
 
-    @RequestMapping(path = {"/favorites"}, method = {RequestMethod.DELETE})
+    @RequestMapping(path = {"/favorites/{sightId}/{userId}"}, method = {RequestMethod.DELETE})
     public JSONObject removeFromFavorite(@PathVariable("sightId") int sightId, @PathVariable("userId") int userId,
                                          HttpServletRequest request, HttpServletResponse response) {
         // token 验证没写

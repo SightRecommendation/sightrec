@@ -1,11 +1,10 @@
 package com.wlc.sightrec.dao;
 
 import com.wlc.sightrec.entity.Favorite;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Mapper
 @Repository
@@ -21,4 +20,8 @@ public interface FavoriteDao {
     @Update({"update ", TABLE_NAME,
             "set status=1 where sight_id=#{sightId} and user_id=#{userId}"})
     int removeFromFavorite(@Param("sightId") int sightId, @Param("userId") int userId);
+
+    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME,
+            " where status=0 and sight_id=#{sightId} and user_id=#{userId}"})
+    List<Favorite> isExistInFavorite(Favorite favorite);
 }

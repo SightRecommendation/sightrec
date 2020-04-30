@@ -46,7 +46,9 @@ import {
   DropdownItem,
   Avatar,
   Upload,
-  Autocomplete
+  Autocomplete,
+  Popconfirm,
+  Popover
 } from 'element-ui'
 
 Vue.use(Button)
@@ -94,6 +96,8 @@ Vue.use(DropdownItem)
 Vue.use(Avatar)
 Vue.use(Upload)
 Vue.use(Autocomplete)
+Vue.use(Popconfirm)
+Vue.use(Popover)
 
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm
