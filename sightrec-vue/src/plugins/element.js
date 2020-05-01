@@ -48,7 +48,9 @@ import {
   Upload,
   Autocomplete,
   Popconfirm,
-  Popover
+  Popover,
+  Timeline,
+  TimelineItem
 } from 'element-ui'
 
 Vue.use(Button)
@@ -98,6 +100,8 @@ Vue.use(Upload)
 Vue.use(Autocomplete)
 Vue.use(Popconfirm)
 Vue.use(Popover)
+Vue.use(Timeline)
+Vue.use(TimelineItem)
 
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm

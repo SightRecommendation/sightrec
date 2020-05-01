@@ -55,7 +55,6 @@ public class CommentController {
                                            @RequestParam("pageSize") int pageSize,
                                            HttpServletRequest request, HttpServletResponse response) {
         // token 验证没写
-        // query 为搜索参数
         String auth = request.getHeader("Authorization");
 
         List<Comment> commentList;
@@ -63,6 +62,34 @@ public class CommentController {
         JSONObject getComments = new JSONObject();
         try {
             commentList = commentService.getCommentsBySight(sightId);
+            // 根据 页码 和 每页评论数 分页
+            int commentNum = commentList.size();
+            int totalPage = (int) Math.ceil(commentNum * 1.0 / pageSize);
+            int offset = pageSize * (pageNum - 1);
+            commentListByPage = commentList.subList(offset, Math.min(commentNum, offset + pageSize));
+            getComments.put("data", JsonUtil.getCommentData(totalPage, pageNum, commentNum, commentListByPage));
+            getComments.put("meta", JsonUtil.getMeta("获取评论列表成功", 200));
+            return getComments;
+        } catch (Exception e) {
+            getComments.put("data", null);
+            getComments.put("meta", JsonUtil.getMeta("获取评论列表失败", 400));
+            return getComments;
+        }
+    }
+
+    @RequestMapping(path = {"/comments/user"}, method = {RequestMethod.GET})
+    public JSONObject getCommentsByUserId(@RequestParam("userId") int userId,
+                                           @RequestParam("pageNum") int pageNum,
+                                           @RequestParam("pageSize") int pageSize,
+                                           HttpServletRequest request, HttpServletResponse response) {
+        // token 验证没写
+        String auth = request.getHeader("Authorization");
+
+        List<Comment> commentList;
+        List<Comment> commentListByPage;
+        JSONObject getComments = new JSONObject();
+        try {
+            commentList = commentService.getCommentsByUser(userId);
             // 根据 页码 和 每页评论数 分页
             int commentNum = commentList.size();
             int totalPage = (int) Math.ceil(commentNum * 1.0 / pageSize);

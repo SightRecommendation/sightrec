@@ -32,6 +32,11 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    public List<Comment> getCommentsByUser(int userId) {
+        return commentDao.selectByUser(userId);
+    }
+
+    @Override
     public Comment getCommentById(int id) {
         return commentDao.selectById(id);
     }

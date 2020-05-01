@@ -18,8 +18,12 @@ public interface CommentDao {
     int addComment(Comment comment);
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME,
-            " where status=0 and sight_id=#{sightId} order by id desc"})
+            " where status=0 and sight_id=#{sightId} order by created_date desc"})
     List<Comment> selectBySight(@Param("sightId") int sightId);
+
+    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME,
+            " where status=0 and user_id=#{userId} order by created_date desc"})
+    List<Comment> selectByUser(@Param("userId") int userId);
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME,
             " where status=0 and id=#{id}"})

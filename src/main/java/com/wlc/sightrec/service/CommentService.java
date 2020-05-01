@@ -9,6 +9,8 @@ public interface CommentService {
 
     List<Comment> getCommentsBySight(int sightId);
 
+    List<Comment> getCommentsByUser(int userId);
+
     Comment getCommentById(int id);
 
     List<Comment> getCommentsByContent(String query);

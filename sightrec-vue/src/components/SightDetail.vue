@@ -103,7 +103,8 @@
             <el-card class="card-comment"
                      shadow="never">
               <p>
-                <el-avatar :src="userList[index].headUrl"></el-avatar>
+                <el-avatar shape="square"
+                           :src="userList[index].headUrl"></el-avatar>
                 <span style="position: relative;margin-left: 10px;bottom: 13px;">{{ userList[index].name }}</span>
                 <span style="font-size: 12px;float: right;color: #909399;">{{ item.createdDate }}</span>
               </p>
@@ -113,7 +114,8 @@
           <el-card class="card-comment"
                    shadow="never">
             <div style="display:flex">
-              <el-avatar style="margin-right: 10px;"
+              <el-avatar shape="square"
+                         style="margin-right: 10px;"
                          :src=loginUserHeadUrl></el-avatar>
               <el-input type="textarea"
                         placeholder="你的想法 ~"
