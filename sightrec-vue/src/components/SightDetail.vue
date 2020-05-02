@@ -282,6 +282,7 @@ export default {
       this.getCommentUserList()
     },
     async getCommentUserList () {
+      var tempUserList = []
       for (let i = 0; i < this.commentList.length; i++) {
         this.userQueryInfo.id = this.commentList[i].userId
         const { data: res } = await this.$http.get('users/', {
@@ -290,9 +291,9 @@ export default {
         if (res.meta.status !== 200) {
           return this.$message.error('获取用户失败！')
         }
-        var tempUser = res.data
-        this.userList[i] = tempUser
+        tempUserList[i] = res.data
       }
+      this.userList = tempUserList
       // 获取登录用户的头像
       const { data: res } = await this.$http.get('users/', {
         params: { id: this.loginUserId }
