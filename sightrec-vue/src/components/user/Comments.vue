@@ -20,7 +20,15 @@
                           :timestamp=item.createdDate
                           placement="top">
           <el-card>
-            <h4> {{ item.sightName }} </h4>
+            <el-link class="span-sight"
+                     style="font-size: 17px;font-weight: 600"
+                     @click="jumpSightDetail(item.sightId)"> {{ item.sightName }} </el-link>
+            <span style="font-size: 13px;font-weight: 400;color: #909399;position: relative;top: 3px"> {{ item.sightCity }} </span>
+            <el-button type="danger"
+                       icon="el-icon-delete"
+                       style="float: right"
+                       @click="removeCommentById(item.commentId)"
+                       circle></el-button>
             <p>{{ item.content }}</p>
           </el-card>
         </el-timeline-item>
@@ -28,7 +36,7 @@
         <el-pagination @size-change="handleSizeChange"
                        @current-change="handleCurrentChange"
                        :current-page="commentQueryInfo.pageNum"
-                       :page-sizes="[5, 10]"
+                       :page-sizes="[5, 10, 20]"
                        :page-size="commentQueryInfo.pageSize"
                        layout="total, sizes, prev, pager, next, jumper"
                        :total="commentNum">
@@ -78,9 +86,11 @@ export default {
           sightId: 1,
           sightName: '景点名称',
           sightCity: '北京',
+          commentId: 1,
           content: '评论内容...',
           createdDate: '2020-01-01 00:00:00'
         }
+        commentAndSight.commentId = this.commentList[i].id
         commentAndSight.content = this.commentList[i].content
         commentAndSight.createdDate = this.commentList[i].createdDate
         commentAndSight.sightId = res.data.id
@@ -90,6 +100,31 @@ export default {
       }
       this.commentAndSightList = tempList
     },
+    // 根据 Id 删除对应的评论
+    async removeCommentById (id) {
+      // 弹框询问用户是否删除数据
+      const confirmResult = await this.$confirm(
+        '此操作将删除该评论, 是否继续？',
+        '提示',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      ).catch(err => err)
+      // 如果用户确认删除，则返回值为字符串 confirm
+      // 如果用户取消了删除，则返回值为字符串 cancel
+      // console.log(confirmResult)
+      if (confirmResult !== 'confirm') {
+        return this.$message.info('取消删除')
+      }
+      const { data: res } = await this.$http.delete('comments/' + id)
+      if (res.meta.status !== 200) {
+        return this.$message.error('删除评论失败！')
+      }
+      this.$message.success('删除评论成功！')
+      this.getUserCommentList()
+    },
     // 监听 pageSize 改变的事件
     handleSizeChange (newSize) {
       this.commentQueryInfo.pageSize = newSize
@@ -98,7 +133,13 @@ export default {
     // 监听 页码值 改变的事件
     handleCurrentChange (newPage) {
       this.commentQueryInfo.pageNum = newPage
+      this.$root.scrollEvent.$emit('trans')
       this.getUserCommentList()
+    },
+    jumpSightDetail (id) {
+      this.$router.push({
+        path: `/sight/${id}`
+      })
     }
   }
 }

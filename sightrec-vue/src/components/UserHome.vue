@@ -1,5 +1,6 @@
 <template>
-  <el-scrollbar class="home-scroll">
+  <el-scrollbar class="home-scroll"
+                ref="myScrollbar">
     <el-container class="home-container">
       <!-- 头部区域 -->
       <el-header>
@@ -67,12 +68,20 @@ export default {
     }
   },
   created () {
+    this.listen()
     this.activePath = this.$route.path
   },
   methods: {
     logout () {
       window.sessionStorage.clear()
       this.$router.push('/login')
+    },
+    // 嵌套路由通信（翻页后回顶部）：https://blog.csdn.net/Candy_mi/article/details/84869960
+    listen () {
+      var that = this
+      this.$root.scrollEvent.$on('trans', function () {
+        that.$refs.myScrollbar.wrap.scrollTop = 0
+      })
     }
   }
 }

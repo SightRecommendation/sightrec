@@ -301,7 +301,7 @@ export default {
         this.$message.success('修改评论成功！')
       })
     },
-    // 根据Id删除对应的评论
+    // 根据 Id 删除对应的评论
     async removeCommentById (id) {
       // 弹框询问用户是否删除数据
       const confirmResult = await this.$confirm(

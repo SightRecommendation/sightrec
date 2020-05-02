@@ -406,13 +406,14 @@ export default {
         this.$message.error('添加评论失败！')
       }
       this.$message.success('添加评论成功！')
-      this.commentQueryInfo.pageSize++
-      this.commentList[this.commentQueryInfo.pageSize - 1] = {
+      // 若评论总数小于单页评论数，则。。。
+      var commentNums = this.commentQueryInfo.pageSize > this.commentList.length ? this.commentList.length + 1 : this.commentQueryInfo.pageSize + 1
+      this.commentList[commentNums - 1] = {
         content: this.myComment,
         userId: this.loginUserId,
         createdDate: this.dateFormat()
       }
-      this.userList[this.commentQueryInfo.pageSize - 1] = {
+      this.userList[commentNums - 1] = {
         name: this.loginUserName,
         headUrl: this.loginUserHeadUrl
       }

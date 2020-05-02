@@ -22,5 +22,10 @@ Vue.config.productionTip = false
 
 new Vue({
   router,
+  data () {
+    return {
+      scrollEvent: new Vue()
+    }
+  },
   render: h => h(App)
 }).$mount('#app')
