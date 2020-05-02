@@ -70,7 +70,6 @@ export default {
         // const response = await this.$http.post('/admins/login', this.loginForm)
         if (result.meta.status !== 200) this.$message.error('登录失败')
         else this.$message.success('登录成功')
-        console.log(result)
         window.sessionStorage.setItem('token', result.data.token)
         this.$router.push('/home')
       })

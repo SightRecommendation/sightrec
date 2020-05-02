@@ -32,7 +32,8 @@ import {
   DatePicker,
   Scrollbar,
   Link,
-  Popover
+  Popover,
+  ButtonGroup
 } from 'element-ui'
 
 Vue.use(Button)
@@ -66,6 +67,7 @@ Vue.use(DatePicker)
 Vue.use(Scrollbar)
 Vue.use(Link)
 Vue.use(Popover)
+Vue.use(ButtonGroup)
 
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm

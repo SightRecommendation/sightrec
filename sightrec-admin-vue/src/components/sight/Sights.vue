@@ -235,7 +235,6 @@ export default {
       this.sightList = res.data.sights
       this.imageUrlToJsonObject()
       this.sightNum = res.data.sightNum
-      console.log(res)
     },
     // imageUrl 由 JSON 字符串转为 JSON 对象
     imageUrlToJsonObject () {
@@ -257,6 +256,7 @@ export default {
     // 监听 页码值 改变的事件
     handleCurrentChange (newPage) {
       this.queryInfo.pageNum = newPage
+      this.$root.scrollEvent.$emit('trans')
       this.getSightList()
     },
     // 监听添加景点对话框的关闭事件

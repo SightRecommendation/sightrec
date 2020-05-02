@@ -225,7 +225,6 @@ export default {
       }
       this.commentList = res.data.comments
       this.commentNum = res.data.commentNum
-      console.log(res)
     },
     // 搜索评论，页码要置为 1
     searchComments () {
@@ -234,14 +233,13 @@ export default {
     },
     // 监听 pageSize 改变的事件
     handleSizeChange (newSize) {
-      // console.log(newSize)
       this.queryInfo.pageSize = newSize
       this.getCommentList()
     },
     // 监听 页码值 改变的事件
     handleCurrentChange (newPage) {
-      // console.log(newPage)
       this.queryInfo.pageNum = newPage
+      this.$root.scrollEvent.$emit('trans')
       this.getCommentList()
     },
     // 监听添加评论对话框的关闭事件
