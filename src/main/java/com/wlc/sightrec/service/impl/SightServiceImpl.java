@@ -30,6 +30,11 @@ public class SightServiceImpl implements SightService {
     }
 
     @Override
+    public List<Sight> getSightsByNameAndPoint(String query) {
+        return sightDao.selectByNameAndPoint(query);
+    }
+
+    @Override
     public List<Sight> getSightsByTag(String query) {
         return sightDao.selectByTag(query);
     }

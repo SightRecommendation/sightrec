@@ -30,6 +30,10 @@ public interface SightDao {
     List<Sight> selectByNameAndHeat(@Param("query") String query);
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME,
+            " where status=0 and name like #{query} order by point desc"})
+    List<Sight> selectByNameAndPoint(@Param("query") String query);
+
+    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME,
             " where status=0 and subject like #{query}"})
     List<Sight> selectByTag(@Param("query") String query);
 

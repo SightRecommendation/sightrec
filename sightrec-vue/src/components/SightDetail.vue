@@ -61,7 +61,7 @@
                         trigger="hover"
                         placement="top-start"
                         width="120"
-                        content="点击”已收藏“按钮以取消收藏">
+                        content="点击按钮取消收藏">
               <el-button slot="reference"
                          style="position: relative;margin-right: 225px;"
                          type='success'

@@ -11,6 +11,8 @@ public interface SightService {
 
     List<Sight> getSightsByNameAndHeat(String query);
 
+    List<Sight> getSightsByNameAndPoint(String query);
+
     List<Sight> getSightsByTag(String query);
 
     void deleteSight(int id);

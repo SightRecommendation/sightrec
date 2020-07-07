@@ -27,7 +27,7 @@
         </span>
       </el-col>
       <el-button class="button-next"
-                 icon="el-icon-arrow-right"
+                 icon="el-icon-refresh"
                  circle></el-button>
     </el-row>
     <el-divider></el-divider>
@@ -58,7 +58,7 @@
         </span>
       </el-col>
       <el-button class="button-next"
-                 icon="el-icon-arrow-right"
+                 icon="el-icon-refresh"
                  circle></el-button>
     </el-row>
     <el-divider></el-divider>
@@ -89,7 +89,7 @@
         </span>
       </el-col>
       <el-button class="button-next"
-                 icon="el-icon-arrow-right"
+                 icon="el-icon-refresh"
                  circle></el-button>
     </el-row>
   </div>

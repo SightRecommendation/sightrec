@@ -102,12 +102,72 @@ public class SightController {
             // 根据 页码 和 每页景点数 分页
             int sightNum = sightList.size();
             int totalPage = (int) Math.ceil(sightNum * 1.0 / pageSize);
-            int offset = pageSize * (pageNum - 1);
             List<Integer> rand = new Random().ints(0, sightNum).distinct().limit(sightNum).boxed().collect(Collectors.toList());
             for (int i = 0; i < Math.min(pageSize, sightNum); i++) {
                 sightListByPage.add(sightList.get(rand.get(i)));
             }
-//            sightListByPage = sightList.subList(offset, Math.min(sightNum, offset + pageSize));
+            getSights.put("data", JsonUtil.getSightData(totalPage, pageNum, sightNum, sightListByPage));
+            getSights.put("meta", JsonUtil.getMeta("获取景点列表成功", 200));
+            return getSights;
+        } catch (Exception e) {
+            getSights.put("data", null);
+            getSights.put("meta", JsonUtil.getMeta("获取景点列表失败", 400));
+            return getSights;
+        }
+    }
+
+    @RequestMapping(path = {"/sights/popular"}, method = {RequestMethod.GET})
+    public JSONObject getMostPopularSights(@RequestParam("query") String query,
+                                @RequestParam("pageNum") int pageNum,
+                                @RequestParam("pageSize") int pageSize,
+                                HttpServletRequest request, HttpServletResponse response) {
+        // token 验证没写
+        // query 为搜索参数
+        String auth = request.getHeader("Authorization");
+
+        List<Sight> sightList;
+        List<Sight> sightListByPage;
+        JSONObject getSights = new JSONObject();
+        try {
+            // 模糊搜索，返回所有符合条件的景点
+            query = "%" + query + "%";
+            sightList = sightService.getSightsByNameAndHeat(query);
+            // 根据 页码 和 每页景点数 分页
+            int sightNum = sightList.size();
+            int totalPage = (int) Math.ceil(sightNum * 1.0 / pageSize);
+            int offset = pageSize * (pageNum - 1);
+            sightListByPage = sightList.subList(offset, Math.min(sightNum, offset + pageSize));
+            getSights.put("data", JsonUtil.getSightData(totalPage, pageNum, sightNum, sightListByPage));
+            getSights.put("meta", JsonUtil.getMeta("获取景点列表成功", 200));
+            return getSights;
+        } catch (Exception e) {
+            getSights.put("data", null);
+            getSights.put("meta", JsonUtil.getMeta("获取景点列表失败", 400));
+            return getSights;
+        }
+    }
+
+    @RequestMapping(path = {"/sights/highrated"}, method = {RequestMethod.GET})
+    public JSONObject getHighratedSights(@RequestParam("query") String query,
+                                           @RequestParam("pageNum") int pageNum,
+                                           @RequestParam("pageSize") int pageSize,
+                                           HttpServletRequest request, HttpServletResponse response) {
+        // token 验证没写
+        // query 为搜索参数
+        String auth = request.getHeader("Authorization");
+
+        List<Sight> sightList;
+        List<Sight> sightListByPage;
+        JSONObject getSights = new JSONObject();
+        try {
+            // 模糊搜索，返回所有符合条件的景点
+            query = "%" + query + "%";
+            sightList = sightService.getSightsByNameAndPoint(query);
+            // 根据 页码 和 每页景点数 分页
+            int sightNum = sightList.size();
+            int totalPage = (int) Math.ceil(sightNum * 1.0 / pageSize);
+            int offset = pageSize * (pageNum - 1);
+            sightListByPage = sightList.subList(offset, Math.min(sightNum, offset + pageSize));
             getSights.put("data", JsonUtil.getSightData(totalPage, pageNum, sightNum, sightListByPage));
             getSights.put("meta", JsonUtil.getMeta("获取景点列表成功", 200));
             return getSights;
