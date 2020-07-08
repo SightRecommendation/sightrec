@@ -172,8 +172,9 @@
         </span>
       </el-col>
       <el-button class="button-next"
-                 icon="el-icon-arrow-right"
-                 circle></el-button>
+                 icon="el-icon-refresh"
+                 circle
+                 @click="getSimilarSightList()"></el-button>
     </el-row>
   </div>
 </template>

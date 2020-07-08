@@ -17,5 +17,7 @@ public interface SightService {
 
     void deleteSight(int id);
 
+    int getSightCount();
+
     void modifySight(Sight changedSight);
 }

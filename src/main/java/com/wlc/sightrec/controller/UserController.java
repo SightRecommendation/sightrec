@@ -34,15 +34,15 @@ public class UserController {
         }
     }
 
-    @RequestMapping(value = {"/users", ""}, method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-    public BaseResponse queryUserById(@RequestParam(value = "id") Integer id) {
-        try {
-            User user = userService.queryUserById(id);
-            return BaseResponse.ok("查询成功", user);
-        } catch (Exception e) {
-            return BaseResponse.fail(e.getMessage(), null);
-        }
-    }
+//    @RequestMapping(value = {"/users", ""}, method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+//    public BaseResponse queryUserById(@RequestParam(value = "id") Integer id) {
+//        try {
+//            User user = userService.queryUserById(id);
+//            return BaseResponse.ok("查询成功", user);
+//        } catch (Exception e) {
+//            return BaseResponse.fail(e.getMessage(), null);
+//        }
+//    }
 
     @RequestMapping(value = {"/users/name", ""}, method = RequestMethod.GET, produces = "application/json;charset=utf-8")
     public BaseResponse queryUserByName(@RequestParam(value = "name") String name) {
@@ -54,12 +54,12 @@ public class UserController {
         }
     }
 
-    @RequestMapping(value = {"/users", ""}, method = RequestMethod.GET, produces = "application/json;charset=utf-8", params = {"keyString", "pageNum", "pageSize"})
-    public BaseResponse queryUser(@RequestParam(value = "keyString") String keyString,
+    @RequestMapping(value = {"/users", ""}, method = RequestMethod.GET, produces = "application/json;charset=utf-8", params = {"query", "pageNum", "pageSize"})
+    public BaseResponse queryUser(@RequestParam(value = "query") String query,
                                   @RequestParam(value = "pageNum") Integer pageNum,
                                   @RequestParam(value = "pageSize") Integer pageSize) {
         try {
-            Map<String, Object> data = userService.queryUser(keyString, pageNum, pageSize);
+            Map<String, Object> data = userService.queryUser(query, pageNum, pageSize);
             return BaseResponse.ok("查询成功", data);
         } catch (Exception e) {
             return BaseResponse.fail(e.getMessage(), null);

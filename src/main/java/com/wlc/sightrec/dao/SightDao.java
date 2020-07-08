@@ -37,6 +37,9 @@ public interface SightDao {
             " where status=0 and subject like #{query}"})
     List<Sight> selectByTag(@Param("query") String query);
 
+    @Select({"select COUNT(*) from ", TABLE_NAME})
+    int getSightCount();
+
     @Update({"update ", TABLE_NAME,
             "set status=1 where id=#{id}"})
     int updateStatus(@Param("id") int id);

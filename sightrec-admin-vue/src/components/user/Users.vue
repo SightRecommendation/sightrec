@@ -28,27 +28,20 @@
       </el-row>
 
       <!-- 用户列表区域 -->
-      <el-table :data="userlist"
+      <el-table :data="userList"
                 border
                 stripe>
         <el-table-column type="index"></el-table-column>
         <el-table-column label="姓名"
-                         prop="username"></el-table-column>
+                         prop="name"></el-table-column>
         <el-table-column label="邮箱"
                          prop="email"></el-table-column>
-        <el-table-column label="电话"
-                         prop="mobile"></el-table-column>
-        <el-table-column label="角色"
-                         prop="role_name"></el-table-column>
-        <el-table-column label="状态">
-          <template slot-scope="scope">
-            <el-switch v-model="scope.row.mg_state"
-                       @change="userStateChanged(scope.row)">
-            </el-switch>
-          </template>
-        </el-table-column>
+        <el-table-column label="手机号"
+                         prop="phone"></el-table-column>
+        <el-table-column label="头像"
+                         prop="headUrl"></el-table-column>
         <el-table-column label="操作"
-                         width="180px">
+                         width="120px">
           <template slot-scope="scope">
             <!-- 修改按钮 -->
             <el-button type="primary"
@@ -60,16 +53,6 @@
                        icon="el-icon-delete"
                        size="mini"
                        @click="removeUserById(scope.row.id)"></el-button>
-            <!-- 分配角色按钮 -->
-            <el-tooltip effect="dark"
-                        content="分配角色"
-                        placement="top"
-                        :enterable="false">
-              <el-button type="warning"
-                         icon="el-icon-setting"
-                         size="mini"
-                         @click="setRole(scope.row)"></el-button>
-            </el-tooltip>
           </template>
         </el-table-column>
       </el-table>
@@ -77,9 +60,9 @@
       <!-- 分页区域 -->
       <el-pagination @size-change="handleSizeChange"
                      @current-change="handleCurrentChange"
-                     :current-page="queryInfo.pagenum"
+                     :current-page="queryInfo.pageNum"
                      :page-sizes="[1, 2, 5, 10]"
-                     :page-size="queryInfo.pagesize"
+                     :page-size="queryInfo.pageSize"
                      layout="total, sizes, prev, pager, next, jumper"
                      :total="total">
       </el-pagination>
@@ -213,11 +196,11 @@ export default {
       queryInfo: {
         query: '',
         // 当前的页数
-        pagenum: 1,
+        pageNum: 1,
         // 当前每页显示多少条数据
-        pagesize: 2
+        pageSize: 5
       },
-      userlist: [],
+      userList: [],
       total: 0,
       // 控制添加用户对话框的显示与隐藏
       addDialogVisible: false,
@@ -293,18 +276,18 @@ export default {
       if (res.meta.status !== 200) {
         return this.$message.error('获取用户列表失败！')
       }
-      this.userlist = res.data.users
+      this.userList = res.data.users
       this.total = res.data.total
-      console.log(res)
+      console.log(this.userList)
     },
-    // 监听 pagesize 改变的事件
+    // 监听 pageSize 改变的事件
     handleSizeChange (newSize) {
-      this.queryInfo.pagesize = newSize
+      this.queryInfo.pageSize = newSize
       this.getUserList()
     },
     // 监听 页码值 改变的事件
     handleCurrentChange (newPage) {
-      this.queryInfo.pagenum = newPage
+      this.queryInfo.pageNum = newPage
       this.$root.scrollEvent.$emit('trans')
       this.getUserList()
     },

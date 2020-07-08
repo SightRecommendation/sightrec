@@ -52,6 +52,11 @@ public class SightServiceImpl implements SightService {
     }
 
     @Override
+    public int getSightCount(){
+        return sightDao.getSightCount();
+    }
+
+    @Override
     public void modifySight(Sight changedSight) {
         try {
             int success = sightDao.updateSight(changedSight);

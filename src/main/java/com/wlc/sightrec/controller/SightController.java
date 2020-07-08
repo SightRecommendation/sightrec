@@ -93,7 +93,7 @@ public class SightController {
         String auth = request.getHeader("Authorization");
 
         List<Sight> sightList;
-        List<Sight> sightListByPage = new ArrayList<>(pageNum);
+        List<Sight> sightListByPage = new ArrayList<>();
         JSONObject getSights = new JSONObject();
         try {
             // 模糊搜索，返回所有符合条件的景点
@@ -125,19 +125,28 @@ public class SightController {
         // query 为搜索参数
         String auth = request.getHeader("Authorization");
 
-        List<Sight> sightList;
-        List<Sight> sightListByPage;
+        List<Sight> sightList = new ArrayList<>();
         JSONObject getSights = new JSONObject();
         try {
-            // 模糊搜索，返回所有符合条件的景点
-            query = "%" + query + "%";
-            sightList = sightService.getSightsByNameAndHeat(query);
-            // 根据 页码 和 每页景点数 分页
-            int sightNum = sightList.size();
-            int totalPage = (int) Math.ceil(sightNum * 1.0 / pageSize);
-            int offset = pageSize * (pageNum - 1);
-            sightListByPage = sightList.subList(offset, Math.min(sightNum, offset + pageSize));
-            getSights.put("data", JsonUtil.getSightData(totalPage, pageNum, sightNum, sightListByPage));
+            // 获取景点总数，并生成 pageSize * 10 个随机数
+            int sightCount = sightService.getSightCount();
+            Random rand = new Random();
+            for (int i = 0; i < pageSize * 10; i++) {
+                if (sightList.size() >= 5) {
+                    break;
+                }
+                int tempSightId = rand.nextInt(sightCount);
+                Sight tempSight = sightService.getSightById(tempSightId);
+                if (tempSight.getHeat() >= 1000) {
+                    sightList.add(tempSight);
+                }
+            }
+            if (sightList.size() < pageSize) {
+                for (int i = 0; i < pageSize - sightList.size(); i++) {
+                    sightList.add(sightService.getSightById(rand.nextInt(sightCount)));
+                }
+            }
+            getSights.put("data", JsonUtil.getSightData(1, pageNum, pageSize, sightList));
             getSights.put("meta", JsonUtil.getMeta("获取景点列表成功", 200));
             return getSights;
         } catch (Exception e) {
@@ -156,19 +165,28 @@ public class SightController {
         // query 为搜索参数
         String auth = request.getHeader("Authorization");
 
-        List<Sight> sightList;
-        List<Sight> sightListByPage;
+        List<Sight> sightList = new ArrayList<>();
         JSONObject getSights = new JSONObject();
         try {
-            // 模糊搜索，返回所有符合条件的景点
-            query = "%" + query + "%";
-            sightList = sightService.getSightsByNameAndPoint(query);
-            // 根据 页码 和 每页景点数 分页
-            int sightNum = sightList.size();
-            int totalPage = (int) Math.ceil(sightNum * 1.0 / pageSize);
-            int offset = pageSize * (pageNum - 1);
-            sightListByPage = sightList.subList(offset, Math.min(sightNum, offset + pageSize));
-            getSights.put("data", JsonUtil.getSightData(totalPage, pageNum, sightNum, sightListByPage));
+            // 获取景点总数，并生成 pageSize * 10 个随机数
+            int sightCount = sightService.getSightCount();
+            Random rand = new Random();
+            for (int i = 0; i < pageSize * 10; i++) {
+                if (sightList.size() >= 5) {
+                    break;
+                }
+                int tempSightId = rand.nextInt(sightCount);
+                Sight tempSight = sightService.getSightById(tempSightId);
+                if (tempSight.getPoint() == 5) {
+                    sightList.add(tempSight);
+                }
+            }
+            if (sightList.size() < pageSize) {
+                for (int i = 0; i < pageSize - sightList.size(); i++) {
+                    sightList.add(sightService.getSightById(rand.nextInt(sightCount)));
+                }
+            }
+            getSights.put("data", JsonUtil.getSightData(1, pageNum, pageSize, sightList));
             getSights.put("meta", JsonUtil.getMeta("获取景点列表成功", 200));
             return getSights;
         } catch (Exception e) {

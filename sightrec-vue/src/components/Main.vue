@@ -28,7 +28,8 @@
       </el-col>
       <el-button class="button-next"
                  icon="el-icon-refresh"
-                 circle></el-button>
+                 circle
+                 @click="getPopularSightList()"></el-button>
     </el-row>
     <el-divider></el-divider>
     <h2>好评最多</h2>
@@ -59,7 +60,8 @@
       </el-col>
       <el-button class="button-next"
                  icon="el-icon-refresh"
-                 circle></el-button>
+                 circle
+                 @click="getHighratedSightList()"></el-button>
     </el-row>
     <el-divider></el-divider>
     <h2>为你推荐</h2>
@@ -138,7 +140,7 @@ export default {
   },
   methods: {
     async getPopularSightList () {
-      const { data: res } = await this.$http.get('sights', {
+      const { data: res } = await this.$http.get('sights/popular', {
         params: this.popularQueryInfo
       })
       if (res.meta.status !== 200) {
@@ -151,7 +153,7 @@ export default {
       }
     },
     async getHighratedSightList () {
-      const { data: res } = await this.$http.get('sights', {
+      const { data: res } = await this.$http.get('sights/highrated', {
         params: this.highratedQueryInfo
       })
       if (res.meta.status !== 200) {
