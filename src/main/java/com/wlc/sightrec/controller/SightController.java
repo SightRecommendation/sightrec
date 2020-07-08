@@ -118,9 +118,9 @@ public class SightController {
 
     @RequestMapping(path = {"/sights/popular"}, method = {RequestMethod.GET})
     public JSONObject getMostPopularSights(@RequestParam("query") String query,
-                                @RequestParam("pageNum") int pageNum,
-                                @RequestParam("pageSize") int pageSize,
-                                HttpServletRequest request, HttpServletResponse response) {
+                                           @RequestParam("pageNum") int pageNum,
+                                           @RequestParam("pageSize") int pageSize,
+                                           HttpServletRequest request, HttpServletResponse response) {
         // token 验证没写
         // query 为搜索参数
         String auth = request.getHeader("Authorization");
@@ -128,23 +128,21 @@ public class SightController {
         List<Sight> sightList = new ArrayList<>();
         JSONObject getSights = new JSONObject();
         try {
-            // 获取景点总数，并生成 pageSize * 10 个随机数
+            // 获取景点总数，并生成 pageSize * 50 个随机数
             int sightCount = sightService.getSightCount();
             Random rand = new Random();
-            for (int i = 0; i < pageSize * 10; i++) {
+            for (int i = 0; i < pageSize * 50; i++) {
                 if (sightList.size() >= 5) {
                     break;
                 }
                 int tempSightId = rand.nextInt(sightCount);
                 Sight tempSight = sightService.getSightById(tempSightId);
-                if (tempSight.getHeat() >= 1000) {
+                if (tempSight.getHeat() >= 18000) {
                     sightList.add(tempSight);
                 }
             }
-            if (sightList.size() < pageSize) {
-                for (int i = 0; i < pageSize - sightList.size(); i++) {
-                    sightList.add(sightService.getSightById(rand.nextInt(sightCount)));
-                }
+            while (sightList.size() < pageSize) {
+                sightList.add(sightService.getSightById(rand.nextInt(sightCount)));
             }
             getSights.put("data", JsonUtil.getSightData(1, pageNum, pageSize, sightList));
             getSights.put("meta", JsonUtil.getMeta("获取景点列表成功", 200));
@@ -158,9 +156,9 @@ public class SightController {
 
     @RequestMapping(path = {"/sights/highrated"}, method = {RequestMethod.GET})
     public JSONObject getHighratedSights(@RequestParam("query") String query,
-                                           @RequestParam("pageNum") int pageNum,
-                                           @RequestParam("pageSize") int pageSize,
-                                           HttpServletRequest request, HttpServletResponse response) {
+                                         @RequestParam("pageNum") int pageNum,
+                                         @RequestParam("pageSize") int pageSize,
+                                         HttpServletRequest request, HttpServletResponse response) {
         // token 验证没写
         // query 为搜索参数
         String auth = request.getHeader("Authorization");
@@ -171,20 +169,18 @@ public class SightController {
             // 获取景点总数，并生成 pageSize * 10 个随机数
             int sightCount = sightService.getSightCount();
             Random rand = new Random();
-            for (int i = 0; i < pageSize * 10; i++) {
+            for (int i = 0; i < pageSize * 20; i++) {
                 if (sightList.size() >= 5) {
                     break;
                 }
                 int tempSightId = rand.nextInt(sightCount);
                 Sight tempSight = sightService.getSightById(tempSightId);
-                if (tempSight.getPoint() == 5) {
+                if (tempSight.getPoint() >= 4.9 && tempSight.getHeat() >= 3000) {
                     sightList.add(tempSight);
                 }
             }
-            if (sightList.size() < pageSize) {
-                for (int i = 0; i < pageSize - sightList.size(); i++) {
-                    sightList.add(sightService.getSightById(rand.nextInt(sightCount)));
-                }
+            while (sightList.size() < pageSize) {
+                sightList.add(sightService.getSightById(rand.nextInt(sightCount)));
             }
             getSights.put("data", JsonUtil.getSightData(1, pageNum, pageSize, sightList));
             getSights.put("meta", JsonUtil.getMeta("获取景点列表成功", 200));

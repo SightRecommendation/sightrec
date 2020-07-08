@@ -92,7 +92,8 @@
       </el-col>
       <el-button class="button-next"
                  icon="el-icon-refresh"
-                 circle></el-button>
+                 circle
+                 @click="getRecommendedSightList()"></el-button>
     </el-row>
   </div>
 </template>
@@ -166,7 +167,7 @@ export default {
       }
     },
     async getRecommendedSightList () {
-      const { data: res } = await this.$http.get('sights', {
+      const { data: res } = await this.$http.get('sights/popular', {
         params: this.recommendedQueryInfo
       })
       if (res.meta.status !== 200) {

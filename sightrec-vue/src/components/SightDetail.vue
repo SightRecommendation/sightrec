@@ -296,7 +296,7 @@ export default {
       }
       this.userList = tempUserList
       // 获取登录用户的头像
-      const { data: res } = await this.$http.get('users/', {
+      const { data: res } = await this.$http.get('users/id', {
         params: { id: this.loginUserId }
       })
       if (res.meta.status !== 200) {
