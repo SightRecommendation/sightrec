@@ -67,4 +67,16 @@ public class SightServiceImpl implements SightService {
             throw new RuntimeException("修改景点失败：catch");
         }
     }
+
+    @Override
+    public void addSightHeat(int id) {
+        try {
+            int success = sightDao.updateHeat(id);
+            if (success <= 0) {
+                throw new RuntimeException("修改热度失败：数据库 return");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("修改热度失败：catch");
+        }
+    }
 }

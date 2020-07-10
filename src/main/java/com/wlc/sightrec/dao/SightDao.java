@@ -45,6 +45,10 @@ public interface SightDao {
     int updateStatus(@Param("id") int id);
 
     @Update({"update ", TABLE_NAME,
+            "set heat=heat+1 where id=#{id}"})
+    int updateHeat(@Param("id") int id);
+
+    @Update({"update ", TABLE_NAME,
             "set name=#{name}, province=#{province}, city=#{city}, location=#{location}, " +
                     "level=#{level}, point=#{point}, " +
                     "description=#{description}, introduction=#{introduction}, heat=#{heat}, " +

@@ -20,4 +20,6 @@ public interface SightService {
     int getSightCount();
 
     void modifySight(Sight changedSight);
+
+    void addSightHeat(int id);
 }
