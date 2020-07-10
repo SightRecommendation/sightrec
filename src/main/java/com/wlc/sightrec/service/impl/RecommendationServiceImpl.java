@@ -1,24 +1,47 @@
 package com.wlc.sightrec.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.wlc.sightrec.dao.RatingDao;
 import com.wlc.sightrec.dao.RecommendationDao;
+import com.wlc.sightrec.dao.SightDao;
 import com.wlc.sightrec.entity.Rating;
+import com.wlc.sightrec.entity.Recommendation;
+import com.wlc.sightrec.entity.Sight;
 import com.wlc.sightrec.service.RecommendationService;
+import com.wlc.sightrec.service.SightService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.ml.evaluation.RegressionEvaluator;
+import org.apache.spark.ml.recommendation.ALS;
+import org.apache.spark.ml.recommendation.ALSModel;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SQLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import scala.Int;
+import scala.collection.mutable.WrappedArray;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class RecommendationServiceImpl implements RecommendationService {
     @Autowired
     RatingDao ratingDao;
+
+    @Autowired
+    RecommendationDao recommendationDao;
+
+    @Autowired
+    SightDao sightDao;
+
+    @Autowired
+    SightService sightService;
 
     @Override
     public int doRecommendation() {
@@ -76,16 +99,72 @@ public class RecommendationServiceImpl implements RecommendationService {
         // Generate top 10 user recommendations for a specified set of movies
         Dataset<Row> movies = ratings.select(als.getItemCol()).distinct().limit(3);
         Dataset<Row> movieSubSetRecs = model.recommendForItemSubset(movies, 10);
-        // $example off$
+//         $example off$
         userRecs.show();
 
+
+
+
+        List<Row> list = userRecs.javaRDD().collect();
+        for (Row row : list) {
+            String result = "";
+            log.info(row.get(0).toString());
+            log.info(row.get(1).toString());
+            WrappedArray wrappedArray = (WrappedArray) row.get(1);
+            for (int j = 0; j < wrappedArray.size(); j++) {
+                String str = wrappedArray.apply(j).toString();
+                result += str.split(",")[0];
+            }
+            Integer userId = Integer.parseInt(row.get(0).toString());
+            Recommendation recommendation = recommendationDao.getRecommendation(userId);
+            if (recommendation == null) {
+                recommendationDao.addRecommendation(userId,result);
+            } else {
+                recommendationDao.changeRecommendation(userId,result);
+            }
+
+        }
 
         jsc.stop();
         return 0;
     }
 
     @Override
-    public List<Integer> getRecommendation(Integer userId) {
-        return null;
+    public List<Sight> getRecommendation(Integer userId) {
+        try{
+            Recommendation recommendation = recommendationDao.getRecommendation(userId);
+            List<Sight> sights = new ArrayList<>();
+            if (recommendation == null) {
+                int sightCount = sightService.getSightCount();
+                Random rand = new Random();
+                for (int i = 0; i < 5 * 20; i++) {
+                    if (sights.size() >= 5) {
+                        break;
+                    }
+                    int tempSightId = rand.nextInt(sightCount);
+                    Sight tempSight = sightService.getSightById(tempSightId);
+                    if (tempSight.getPoint() >= 4.9 && tempSight.getHeat() >= 3000) {
+                        sights.add(tempSight);
+                    }
+                }
+                while (sights.size() < 5) {
+                    sights.add(sightService.getSightById(rand.nextInt(sightCount)));
+                }
+            } else {
+
+                String itemIds = recommendation.getItemIds();
+                List<String> ids = Arrays.asList(itemIds.split("\\["));
+                List<Integer> rand = new Random().ints(0, 9).distinct().limit(5).boxed().collect(Collectors.toList());
+                for (Integer i:rand) {
+                    Integer idNum = Integer.parseInt(ids.get(i));
+                    sights.add(sightDao.selectById(idNum));
+                }
+
+            }
+            return sights;
+        }catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
     }
 }

@@ -2,6 +2,7 @@ package com.wlc.sightrec.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wlc.sightrec.entity.Sight;
+import com.wlc.sightrec.service.RecommendationService;
 import com.wlc.sightrec.service.SightService;
 import com.wlc.sightrec.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class SightController {
 
     @Autowired
     SightService sightService;
+
+    @Autowired
+    RecommendationService recommendationService;
 
     @RequestMapping(path = {"/sights"}, method = {RequestMethod.GET})
     public JSONObject getSights(@RequestParam("query") String query,
@@ -257,13 +261,13 @@ public class SightController {
 
         JSONObject deleteSight = new JSONObject();
         try {
-            sightService.deleteSight(id);
-            deleteSight.put("data", null);
-            deleteSight.put("meta", JsonUtil.getMeta("删除景点成功", 200));
+            List<Sight> sights = recommendationService.getRecommendation(id);
+            deleteSight.put("data", sights);
+            deleteSight.put("meta", JsonUtil.getMeta("推荐景点成功", 200));
             return deleteSight;
         } catch (Exception e) {
             deleteSight.put("data", null);
-            deleteSight.put("meta", JsonUtil.getMeta("删除景点失败", 400));
+            deleteSight.put("meta", JsonUtil.getMeta("推荐景点失败", 400));
             return deleteSight;
         }
     }
