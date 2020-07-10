@@ -1,6 +1,5 @@
 package com.wlc.sightrec.dao;
 
-import com.wlc.sightrec.entity.Rating;
 import com.wlc.sightrec.entity.Recommendation;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;

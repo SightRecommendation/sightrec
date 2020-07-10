@@ -20,8 +20,6 @@ public class RecTask extends QuartzJobBean {
     @Override
     protected void executeInternal(JobExecutionContext arg0) throws JobExecutionException {
         log.info("RecTask-------- {}", sdf.format(new Date()));
-
         recommendationService.doRecommendation();
-
     }
 }

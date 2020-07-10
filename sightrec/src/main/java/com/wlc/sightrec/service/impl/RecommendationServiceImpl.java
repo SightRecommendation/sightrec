@@ -1,7 +1,5 @@
 package com.wlc.sightrec.service.impl;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.wlc.sightrec.dao.RatingDao;
 import com.wlc.sightrec.dao.RecommendationDao;
 import com.wlc.sightrec.dao.SightDao;
@@ -22,10 +20,12 @@ import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SQLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import scala.Int;
 import scala.collection.mutable.WrappedArray;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -46,10 +46,6 @@ public class RecommendationServiceImpl implements RecommendationService {
     @Override
     public int doRecommendation() {
         List<Rating> allRatings = ratingDao.getAllRating();
-//        SparkSession spark = SparkSession
-//                .builder()
-//                .appName("Recommendation")
-//                .getOrCreate();
 
         SparkConf conf = new SparkConf().setMaster("local").setAppName("Recommendation");
         JavaSparkContext jsc = new JavaSparkContext(conf);
@@ -57,11 +53,6 @@ public class RecommendationServiceImpl implements RecommendationService {
 
         JavaRDD<Rating> ratingsRDD = jsc.parallelize(allRatings);
 
-
-//        // $example on$
-//        JavaRDD<Rating> ratingsRDD = spark
-//                .read().textFile("data/mllib/als/sample_movielens_ratings.txt").javaRDD()
-//                .map(Rating::parseRating);
         Dataset<Row> ratings = sqlContext.createDataFrame(ratingsRDD, Rating.class);
         Dataset<Row>[] splits = ratings.randomSplit(new double[]{0.8, 0.2});
         Dataset<Row> training = splits[0];
@@ -90,20 +81,7 @@ public class RecommendationServiceImpl implements RecommendationService {
 
         // Generate top 10 movie recommendations for each user
         Dataset<Row> userRecs = model.recommendForAllUsers(10);
-        // Generate top 10 user recommendations for each movie
-        Dataset<Row> movieRecs = model.recommendForAllItems(10);
-
-        // Generate top 10 movie recommendations for a specified set of users
-        Dataset<Row> users = ratings.select(als.getUserCol()).distinct().limit(3);
-        Dataset<Row> userSubsetRecs = model.recommendForUserSubset(users, 10);
-        // Generate top 10 user recommendations for a specified set of movies
-        Dataset<Row> movies = ratings.select(als.getItemCol()).distinct().limit(3);
-        Dataset<Row> movieSubSetRecs = model.recommendForItemSubset(movies, 10);
-//         $example off$
         userRecs.show();
-
-
-
 
         List<Row> list = userRecs.javaRDD().collect();
         for (Row row : list) {
@@ -118,9 +96,9 @@ public class RecommendationServiceImpl implements RecommendationService {
             Integer userId = Integer.parseInt(row.get(0).toString());
             Recommendation recommendation = recommendationDao.getRecommendation(userId);
             if (recommendation == null) {
-                recommendationDao.addRecommendation(userId,result);
+                recommendationDao.addRecommendation(userId, result);
             } else {
-                recommendationDao.changeRecommendation(userId,result);
+                recommendationDao.changeRecommendation(userId, result);
             }
 
         }
@@ -131,7 +109,7 @@ public class RecommendationServiceImpl implements RecommendationService {
 
     @Override
     public List<Sight> getRecommendation(Integer userId) {
-        try{
+        try {
             Recommendation recommendation = recommendationDao.getRecommendation(userId);
             List<Sight> sights = new ArrayList<>();
             if (recommendation == null) {
@@ -151,18 +129,24 @@ public class RecommendationServiceImpl implements RecommendationService {
                     sights.add(sightService.getSightById(rand.nextInt(sightCount)));
                 }
             } else {
-
                 String itemIds = recommendation.getItemIds();
                 List<String> ids = Arrays.asList(itemIds.split("\\["));
+                System.out.println(ids);
+                List<String> newIds = new ArrayList<>();
+                for (String id : ids) {
+                    if (!"".equals(id)) {
+                        newIds.add(id);
+                    }
+                }
                 List<Integer> rand = new Random().ints(0, 9).distinct().limit(5).boxed().collect(Collectors.toList());
-                for (Integer i:rand) {
-                    Integer idNum = Integer.parseInt(ids.get(i));
+                for (Integer i : rand) {
+                    Integer idNum = Integer.parseInt(newIds.get(i));
+                    System.out.println(idNum);
                     sights.add(sightDao.selectById(idNum));
                 }
-
             }
             return sights;
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
 

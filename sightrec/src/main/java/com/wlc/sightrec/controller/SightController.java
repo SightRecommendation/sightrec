@@ -253,15 +253,15 @@ public class SightController {
         }
     }
 
-    @RequestMapping(path = {"/sights/rec/{id}"}, method = {RequestMethod.GET})
-    public JSONObject recSight(@PathVariable("id") int id,
-                                  HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(path = {"/sights/rec"}, method = {RequestMethod.GET})
+    public JSONObject recSight(@RequestParam("userId") int userId,
+                               HttpServletRequest request, HttpServletResponse response) {
         // token 验证没写
         String auth = request.getHeader("Authorization");
 
         JSONObject deleteSight = new JSONObject();
         try {
-            List<Sight> sights = recommendationService.getRecommendation(id);
+            List<Sight> sights = recommendationService.getRecommendation(userId);
             deleteSight.put("data", sights);
             deleteSight.put("meta", JsonUtil.getMeta("推荐景点成功", 200));
             return deleteSight;
@@ -274,7 +274,7 @@ public class SightController {
 
     @RequestMapping(path = {"/sights/heat/{id}"}, method = {RequestMethod.PUT})
     public JSONObject addSightHeat(@PathVariable("id") int id,
-                                  HttpServletRequest request, HttpServletResponse response) {
+                                   HttpServletRequest request, HttpServletResponse response) {
         // token 验证没写
         String auth = request.getHeader("Authorization");
 

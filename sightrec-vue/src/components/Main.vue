@@ -102,6 +102,9 @@
 export default {
   data () {
     return {
+      recommendationQueryInfo: {
+        userId: window.sessionStorage.getItem('id')
+      },
       // 获取最受欢迎列表的参数对象
       popularQueryInfo: {
         query: '',
@@ -167,13 +170,14 @@ export default {
       }
     },
     async getRecommendedSightList () {
-      const { data: res } = await this.$http.get('sights/popular', {
-        params: this.recommendedQueryInfo
+      const { data: res } = await this.$http.get('sights/rec', {
+        params: this.recommendationQueryInfo
       })
+      console.log(res)
       if (res.meta.status !== 200) {
-        return this.$message.error('获取景点列表失败！')
+        return this.$message.error('获取推荐景点失败！')
       }
-      this.recommendedList = res.data.sights
+      this.recommendedList = res.data
       this.parsedrecommendedList = this.recommendedList
       for (let i = 0; i < this.recommendedList.length; i++) {
         this.parsedrecommendedList[i].imageUrl = JSON.parse(this.parsedrecommendedList[i].imageUrl)
