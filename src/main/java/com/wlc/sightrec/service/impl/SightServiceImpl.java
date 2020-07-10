@@ -52,8 +52,30 @@ public class SightServiceImpl implements SightService {
     }
 
     @Override
-    public int getSightCount(){
+    public int getSightCount() {
         return sightDao.getSightCount();
+    }
+
+    @Override
+    public double getRating(int id) {
+        return sightDao.getRating(id);
+    }
+
+    @Override
+    public int getRatingFrequency(int id) {
+        return sightDao.getRatingFrequency(id);
+    }
+
+    @Override
+    public void updateRating(int id, double newRatingPoint) {
+        try {
+            int success = sightDao.updateRating(id, newRatingPoint);
+            if (success <= 0) {
+                throw new RuntimeException("修改评分次数失败：数据库 return");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("修改评分次数失败：catch");
+        }
     }
 
     @Override
@@ -67,6 +89,19 @@ public class SightServiceImpl implements SightService {
             throw new RuntimeException("修改景点失败：catch");
         }
     }
+
+    @Override
+    public void addRatingFrequency(int id) {
+        try {
+            int success = sightDao.updateRatingFrequency(id);
+            if (success <= 0) {
+                throw new RuntimeException("修改评分次数失败：数据库 return");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("修改评分次数失败：catch");
+        }
+    }
+
 
     @Override
     public void addSightHeat(int id) {

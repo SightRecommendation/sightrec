@@ -19,7 +19,15 @@ public interface SightService {
 
     int getSightCount();
 
+    double getRating(int id);
+
+    int getRatingFrequency(int id);
+
+    void updateRating(int id, double newRatingPoint);
+
     void modifySight(Sight changedSight);
+
+    void addRatingFrequency(int id);
 
     void addSightHeat(int id);
 }
