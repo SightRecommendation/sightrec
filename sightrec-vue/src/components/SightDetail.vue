@@ -260,8 +260,14 @@ export default {
   },
   methods: {
     async getSightDetail (id) {
-      const { data: res } = await this.$http.get('sights/' + id)
+      const { data: heatRes } = await this.$http.put(
+        'sights/heat/' + id
+      )
+      if (heatRes.meta.status !== 200) {
+        console.log('热度操作不了')
+      }
 
+      const { data: res } = await this.$http.get('sights/' + id)
       if (res.meta.status !== 200) {
         return this.$message.error('获取景点信息失败！')
       }

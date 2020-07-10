@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface SightDao {
     String TABLE_NAME = "qunar_sight ";
-    String INSERT_FIELDS = "name, province, city, location, level, point, " +
+    String INSERT_FIELDS = "name, province, city, location, level, point, point_frequency, " +
             "description, introduction, heat, image_url, subject, coordinate, status";
     String SELECT_FIELDS = "id, " + INSERT_FIELDS;
 
@@ -40,9 +40,29 @@ public interface SightDao {
     @Select({"select COUNT(*) from ", TABLE_NAME})
     int getSightCount();
 
+    @Select({"select point from ", TABLE_NAME,
+            " where status=0 and id=#{id}"})
+    double getRating(@Param("id") int id);
+
+    @Select({"select point_frequency from ", TABLE_NAME,
+            " where status=0 and id=#{id}"})
+    int getRatingFrequency(@Param("id") int id);
+
+    @Update({"update ", TABLE_NAME,
+            "set point=#{rating} where id=#{id}"})
+    int updateRating(@Param("id") int id, @Param("rating") double rating);
+
+    @Update({"update ", TABLE_NAME,
+            "set point_frequency=point_frequency+1 where id=#{id}"})
+    int updateRatingFrequency(@Param("id") int id);
+
     @Update({"update ", TABLE_NAME,
             "set status=1 where id=#{id}"})
     int updateStatus(@Param("id") int id);
+
+    @Update({"update ", TABLE_NAME,
+            "set heat=heat+1 where id=#{id}"})
+    int updateHeat(@Param("id") int id);
 
     @Update({"update ", TABLE_NAME,
             "set name=#{name}, province=#{province}, city=#{city}, location=#{location}, " +
