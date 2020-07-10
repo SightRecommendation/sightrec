@@ -1,32 +1,28 @@
-package com.wlc.sightrec;
+package com.wlc.sightrec.service.impl;
 
 import com.wlc.sightrec.dao.RatingDao;
+import com.wlc.sightrec.dao.RecommendationDao;
 import com.wlc.sightrec.entity.Rating;
+import com.wlc.sightrec.service.RecommendationService;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.ml.evaluation.RegressionEvaluator;
-import org.apache.spark.ml.recommendation.ALS;
-import org.apache.spark.ml.recommendation.ALSModel;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SQLContext;
-import org.apache.spark.sql.SparkSession;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.stereotype.Service;
 
-import java.io.Serializable;
 import java.util.List;
 
-@SpringBootTest
-public class RecommendationTests {
+@Service
+public class RecommendationServiceImpl implements RecommendationService {
     @Autowired
     RatingDao ratingDao;
 
-    @Test
-    void contextLoads() {
-        List<com.wlc.sightrec.entity.Rating> allRatings = ratingDao.getAllRating();
+    @Override
+    public int doRecommendation() {
+        List<Rating> allRatings = ratingDao.getAllRating();
 //        SparkSession spark = SparkSession
 //                .builder()
 //                .appName("Recommendation")
@@ -36,14 +32,14 @@ public class RecommendationTests {
         JavaSparkContext jsc = new JavaSparkContext(conf);
         SQLContext sqlContext = new SQLContext(jsc);
 
-        JavaRDD<com.wlc.sightrec.entity.Rating> ratingsRDD = jsc.parallelize(allRatings);
+        JavaRDD<Rating> ratingsRDD = jsc.parallelize(allRatings);
 
 
 //        // $example on$
 //        JavaRDD<Rating> ratingsRDD = spark
 //                .read().textFile("data/mllib/als/sample_movielens_ratings.txt").javaRDD()
 //                .map(Rating::parseRating);
-        Dataset<Row> ratings = sqlContext.createDataFrame(ratingsRDD, com.wlc.sightrec.entity.Rating.class);
+        Dataset<Row> ratings = sqlContext.createDataFrame(ratingsRDD, Rating.class);
         Dataset<Row>[] splits = ratings.randomSplit(new double[]{0.8, 0.2});
         Dataset<Row> training = splits[0];
         Dataset<Row> test = splits[1];
@@ -85,5 +81,11 @@ public class RecommendationTests {
 
 
         jsc.stop();
+        return 0;
+    }
+
+    @Override
+    public List<Integer> getRecommendation(Integer userId) {
+        return null;
     }
 }

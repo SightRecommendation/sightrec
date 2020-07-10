@@ -4,6 +4,8 @@ import com.wlc.sightrec.entity.Rating;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Mapper
 @Repository
 public interface RatingDao {
@@ -22,4 +24,7 @@ public interface RatingDao {
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME,
             " where status=0 and sight_id=#{sightId} and user_id=#{userId}"})
     Rating getRating(@Param("sightId") int sightId, @Param("userId") int userId);
+
+    @Select({"select ", SELECT_FIELDS, " from", TABLE_NAME})
+    List<Rating> getAllRating();
 }

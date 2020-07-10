@@ -248,4 +248,23 @@ public class SightController {
             return deleteSight;
         }
     }
+
+    @RequestMapping(path = {"/sights/rec/{id}"}, method = {RequestMethod.GET})
+    public JSONObject recSight(@PathVariable("id") int id,
+                                  HttpServletRequest request, HttpServletResponse response) {
+        // token 验证没写
+        String auth = request.getHeader("Authorization");
+
+        JSONObject deleteSight = new JSONObject();
+        try {
+            sightService.deleteSight(id);
+            deleteSight.put("data", null);
+            deleteSight.put("meta", JsonUtil.getMeta("删除景点成功", 200));
+            return deleteSight;
+        } catch (Exception e) {
+            deleteSight.put("data", null);
+            deleteSight.put("meta", JsonUtil.getMeta("删除景点失败", 400));
+            return deleteSight;
+        }
+    }
 }
